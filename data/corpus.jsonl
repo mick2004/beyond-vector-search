@@ -1,0 +1,202 @@
+{"doc_id":"DOC-000","title":"Vector search basics","text":"Vector search represents text as high-dimensional vectors and retrieves by similarity. It works well for paraphrase but can fail on exact IDs or rare tokens."}
+{"doc_id":"DOC-001","title":"Keyword search and BM25","text":"BM25 is a classic term-based ranking function that rewards exact token matches with IDF weighting. It is often strong on identifiers, codes, and rare terms."}
+{"doc_id":"DOC-002","title":"TF-IDF as a lightweight embedding","text":"TF-IDF produces sparse vectors per document. Cosine similarity over TF-IDF can approximate semantic retrieval for small corpora without GPUs."}
+{"doc_id":"DOC-003","title":"Adaptive retrieval routing","text":"A retrieval router chooses among multiple retrievers per query. The router is a decision layer that can learn from evaluation feedback over time."}
+{"doc_id":"DOC-004","title":"Evaluation loop for retrieval","text":"An evaluation loop runs labeled queries, scores retrieval and answers, and writes feedback. That feedback can update router weights or policies."}
+{"doc_id":"DOC-005","title":"Compounding errors in agentic workflows","text":"Agentic systems perform multi-step plans. Early retrieval mistakes propagate into later tool calls and decisions, compounding error and cost."}
+{"doc_id":"DOC-006","title":"When keyword beats vectors","text":"Keyword retrieval often wins when the query includes codes like INC-49217 or user_id=8841. Exact matching can be more reliable than fuzzy similarity."}
+{"doc_id":"DOC-007","title":"When vectors beat keyword","text":"Vector-style similarity can retrieve paraphrases when exact tokens differ. It can work better for natural language questions with shared concepts."}
+{"doc_id":"DOC-008","title":"Telemetry in RAG systems","text":"Logging query, strategy, and scores enables debugging and offline analysis. SQLite is a practical local store for toy experiments."}
+{"doc_id":"DOC-009","title":"Bandits for routing","text":"A multi-armed bandit updates preferences based on observed rewards. For routing, each retriever is an arm and evaluation scores are rewards."}
+{"doc_id":"DOC-010","title":"Incident reference INC-10010","text":"INC-10010 refers to a cache stampede caused by missing request coalescing. The fix is to add singleflight or request de-duplication."}
+{"doc_id":"DOC-011","title":"Incident reference INC-10011","text":"INC-10011 is a queue backlog caused by slow consumers and unbounded retries. The fix is to add backpressure and retry budgets."}
+{"doc_id":"DOC-012","title":"Incident reference INC-10012","text":"INC-10012 is a schema migration rollback due to unsafe ALTER TABLE on a large table. Use expand-and-contract migrations."}
+{"doc_id":"DOC-013","title":"Incident reference INC-10013","text":"INC-10013 is an outage caused by synchronized cron jobs. Stagger schedules and add jitter to reduce thundering herds."}
+{"doc_id":"DOC-014","title":"Incident reference INC-10014","text":"INC-10014 is a partial outage from DNS TTL misconfiguration. Validate TTLs and use gradual rollout for resolver changes."}
+{"doc_id":"DOC-015","title":"Query planning in SQL","text":"SQL query planners choose join orders and indexes. Hints are sometimes used but can lock in suboptimal plans as data changes."}
+{"doc_id":"DOC-016","title":"Index selectivity","text":"High selectivity indexes filter many rows and are more useful. Low selectivity indexes can be slower than sequential scans."}
+{"doc_id":"DOC-017","title":"Caching layers","text":"Caching reduces latency and load. Common patterns include read-through caches, write-through caches, and cache-aside with invalidation."}
+{"doc_id":"DOC-018","title":"Cache invalidation pitfalls","text":"Cache invalidation is hard because writes must update or expire cached data. Use versioned keys or explicit invalidation events."}
+{"doc_id":"DOC-019","title":"Distributed tracing","text":"Tracing correlates requests across services using trace IDs. It helps identify latency hotspots and retry storms in microservices."}
+{"doc_id":"DOC-020","title":"Document 20: retrieval systems","text":"This document discusses retrieval systems in general terms and mentions ranking, recall, and precision. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-021","title":"User identifiers: user_id vs userid","text":"In logs and schemas, user_id often appears with an underscore. The token userid is a common variant in tickets and chat, and character-level similarity helps match them."}
+{"doc_id":"DOC-022","title":"Document 22: retrieval systems","text":"This document discusses retrieval systems in general terms and mentions ranking, recall, and precision. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-023","title":"Document 23: retrieval systems","text":"This document discusses retrieval systems in general terms and mentions ranking, recall, and precision. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-024","title":"Document 24: retrieval systems","text":"This document discusses retrieval systems in general terms and mentions ranking, recall, and precision. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-025","title":"Document 25: retrieval systems","text":"This document discusses retrieval systems in general terms and mentions ranking, recall, and precision. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-026","title":"Document 26: retrieval systems","text":"This document discusses retrieval systems in general terms and mentions ranking, recall, and precision. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-027","title":"Document 27: retrieval systems","text":"This document discusses retrieval systems in general terms and mentions ranking, recall, and precision. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-028","title":"Document 28: retrieval systems","text":"This document discusses retrieval systems in general terms and mentions ranking, recall, and precision. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-029","title":"Document 29: retrieval systems","text":"This document discusses retrieval systems in general terms and mentions ranking, recall, and precision. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-030","title":"Document 30: data engineering","text":"This document is about data engineering: pipelines, batch jobs, and streaming. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-031","title":"Document 31: data engineering","text":"This document is about data engineering: pipelines, batch jobs, and streaming. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-032","title":"Document 32: data engineering","text":"This document is about data engineering: pipelines, batch jobs, and streaming. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-033","title":"Document 33: data engineering","text":"This document is about data engineering: pipelines, batch jobs, and streaming. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-034","title":"Document 34: data engineering","text":"This document is about data engineering: pipelines, batch jobs, and streaming. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-035","title":"Document 35: data engineering","text":"This document is about data engineering: pipelines, batch jobs, and streaming. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-036","title":"Document 36: data engineering","text":"This document is about data engineering: pipelines, batch jobs, and streaming. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-037","title":"Document 37: data engineering","text":"This document is about data engineering: pipelines, batch jobs, and streaming. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-038","title":"Document 38: data engineering","text":"This document is about data engineering: pipelines, batch jobs, and streaming. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-039","title":"Document 39: data engineering","text":"This document is about data engineering: pipelines, batch jobs, and streaming. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-040","title":"Document 40: ML systems","text":"This document is about ML systems: feature stores, training pipelines, and model monitoring. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-041","title":"Document 41: ML systems","text":"This document is about ML systems: feature stores, training pipelines, and model monitoring. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-042","title":"Document 42: ML systems","text":"This document is about ML systems: feature stores, training pipelines, and model monitoring. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-043","title":"Document 43: ML systems","text":"This document is about ML systems: feature stores, training pipelines, and model monitoring. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-044","title":"Document 44: ML systems","text":"This document is about ML systems: feature stores, training pipelines, and model monitoring. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-045","title":"Document 45: ML systems","text":"This document is about ML systems: feature stores, training pipelines, and model monitoring. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-046","title":"Document 46: ML systems","text":"This document is about ML systems: feature stores, training pipelines, and model monitoring. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-047","title":"Document 47: ML systems","text":"This document is about ML systems: feature stores, training pipelines, and model monitoring. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-048","title":"Document 48: ML systems","text":"This document is about ML systems: feature stores, training pipelines, and model monitoring. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-049","title":"Document 49: ML systems","text":"This document is about ML systems: feature stores, training pipelines, and model monitoring. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-050","title":"Document 50: observability","text":"This document is about observability: logs, metrics, and traces. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-051","title":"Document 51: observability","text":"This document is about observability: logs, metrics, and traces. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-052","title":"Document 52: observability","text":"This document is about observability: logs, metrics, and traces. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-053","title":"Document 53: observability","text":"This document is about observability: logs, metrics, and traces. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-054","title":"Document 54: observability","text":"This document is about observability: logs, metrics, and traces. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-055","title":"Document 55: observability","text":"This document is about observability: logs, metrics, and traces. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-056","title":"Document 56: observability","text":"This document is about observability: logs, metrics, and traces. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-057","title":"Document 57: observability","text":"This document is about observability: logs, metrics, and traces. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-058","title":"Document 58: observability","text":"This document is about observability: logs, metrics, and traces. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-059","title":"Document 59: observability","text":"This document is about observability: logs, metrics, and traces. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-060","title":"Document 60: security","text":"This document is about security: authentication, authorization, and audit logs. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-061","title":"Document 61: security","text":"This document is about security: authentication, authorization, and audit logs. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-062","title":"Document 62: security","text":"This document is about security: authentication, authorization, and audit logs. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-063","title":"Document 63: security","text":"This document is about security: authentication, authorization, and audit logs. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-064","title":"Document 64: security","text":"This document is about security: authentication, authorization, and audit logs. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-065","title":"Document 65: security","text":"This document is about security: authentication, authorization, and audit logs. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-066","title":"Document 66: security","text":"This document is about security: authentication, authorization, and audit logs. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-067","title":"Document 67: security","text":"This document is about security: authentication, authorization, and audit logs. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-068","title":"Document 68: security","text":"This document is about security: authentication, authorization, and audit logs. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-069","title":"Document 69: security","text":"This document is about security: authentication, authorization, and audit logs. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-070","title":"Document 70: networking","text":"This document is about networking: timeouts, retries, and backoff. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-071","title":"Document 71: networking","text":"This document is about networking: timeouts, retries, and backoff. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-072","title":"Document 72: networking","text":"This document is about networking: timeouts, retries, and backoff. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-073","title":"Document 73: networking","text":"This document is about networking: timeouts, retries, and backoff. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-074","title":"Document 74: networking","text":"This document is about networking: timeouts, retries, and backoff. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-075","title":"Document 75: networking","text":"This document is about networking: timeouts, retries, and backoff. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-076","title":"Document 76: networking","text":"This document is about networking: timeouts, retries, and backoff. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-077","title":"Document 77: networking","text":"This document is about networking: timeouts, retries, and backoff. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-078","title":"Document 78: networking","text":"This document is about networking: timeouts, retries, and backoff. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-079","title":"Document 79: networking","text":"This document is about networking: timeouts, retries, and backoff. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-080","title":"Document 80: storage","text":"This document is about storage: compaction, partitions, and indexing. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-081","title":"Document 81: storage","text":"This document is about storage: compaction, partitions, and indexing. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-082","title":"Document 82: storage","text":"This document is about storage: compaction, partitions, and indexing. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-083","title":"Document 83: storage","text":"This document is about storage: compaction, partitions, and indexing. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-084","title":"Document 84: storage","text":"This document is about storage: compaction, partitions, and indexing. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-085","title":"Document 85: storage","text":"This document is about storage: compaction, partitions, and indexing. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-086","title":"Document 86: storage","text":"This document is about storage: compaction, partitions, and indexing. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-087","title":"Document 87: storage","text":"This document is about storage: compaction, partitions, and indexing. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-088","title":"Document 88: storage","text":"This document is about storage: compaction, partitions, and indexing. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-089","title":"Document 89: storage","text":"This document is about storage: compaction, partitions, and indexing. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-090","title":"Document 90: agents","text":"This document is about agents: tool use, planning, and memory. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-091","title":"Document 91: agents","text":"This document is about agents: tool use, planning, and memory. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-092","title":"Document 92: agents","text":"This document is about agents: tool use, planning, and memory. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-093","title":"Document 93: agents","text":"This document is about agents: tool use, planning, and memory. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-094","title":"Document 94: agents","text":"This document is about agents: tool use, planning, and memory. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-095","title":"Document 95: agents","text":"This document is about agents: tool use, planning, and memory. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-096","title":"Document 96: agents","text":"This document is about agents: tool use, planning, and memory. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-097","title":"Document 97: agents","text":"This document is about agents: tool use, planning, and memory. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-098","title":"Document 98: agents","text":"This document is about agents: tool use, planning, and memory. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-099","title":"Document 99: agents","text":"This document is about agents: tool use, planning, and memory. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-100","title":"Document 100: reliability","text":"This document is about reliability: SLOs, error budgets, and rollback strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-101","title":"Document 101: reliability","text":"This document is about reliability: SLOs, error budgets, and rollback strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-102","title":"Document 102: reliability","text":"This document is about reliability: SLOs, error budgets, and rollback strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-103","title":"Document 103: reliability","text":"This document is about reliability: SLOs, error budgets, and rollback strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-104","title":"Document 104: reliability","text":"This document is about reliability: SLOs, error budgets, and rollback strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-105","title":"Document 105: reliability","text":"This document is about reliability: SLOs, error budgets, and rollback strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-106","title":"Document 106: reliability","text":"This document is about reliability: SLOs, error budgets, and rollback strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-107","title":"Document 107: reliability","text":"This document is about reliability: SLOs, error budgets, and rollback strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-108","title":"Document 108: reliability","text":"This document is about reliability: SLOs, error budgets, and rollback strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-109","title":"Document 109: reliability","text":"This document is about reliability: SLOs, error budgets, and rollback strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-110","title":"Document 110: governance","text":"This document is about governance: data contracts and lineage. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-111","title":"Document 111: governance","text":"This document is about governance: data contracts and lineage. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-112","title":"Document 112: governance","text":"This document is about governance: data contracts and lineage. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-113","title":"Document 113: governance","text":"This document is about governance: data contracts and lineage. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-114","title":"Document 114: governance","text":"This document is about governance: data contracts and lineage. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-115","title":"Document 115: governance","text":"This document is about governance: data contracts and lineage. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-116","title":"Document 116: governance","text":"This document is about governance: data contracts and lineage. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-117","title":"Document 117: governance","text":"This document is about governance: data contracts and lineage. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-118","title":"Document 118: governance","text":"This document is about governance: data contracts and lineage. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-119","title":"Document 119: governance","text":"This document is about governance: data contracts and lineage. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-120","title":"Document 120: product analytics","text":"This document is about product analytics: funnels, cohorts, and experimentation. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-121","title":"Document 121: product analytics","text":"This document is about product analytics: funnels, cohorts, and experimentation. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-122","title":"Document 122: product analytics","text":"This document is about product analytics: funnels, cohorts, and experimentation. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-123","title":"Document 123: product analytics","text":"This document is about product analytics: funnels, cohorts, and experimentation. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-124","title":"Document 124: product analytics","text":"This document is about product analytics: funnels, cohorts, and experimentation. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-125","title":"Document 125: product analytics","text":"This document is about product analytics: funnels, cohorts, and experimentation. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-126","title":"Document 126: product analytics","text":"This document is about product analytics: funnels, cohorts, and experimentation. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-127","title":"Document 127: product analytics","text":"This document is about product analytics: funnels, cohorts, and experimentation. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-128","title":"Document 128: product analytics","text":"This document is about product analytics: funnels, cohorts, and experimentation. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-129","title":"Document 129: product analytics","text":"This document is about product analytics: funnels, cohorts, and experimentation. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-130","title":"Document 130: APIs","text":"This document is about APIs: pagination, idempotency, and rate limits. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-131","title":"Document 131: APIs","text":"This document is about APIs: pagination, idempotency, and rate limits. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-132","title":"Document 132: APIs","text":"This document is about APIs: pagination, idempotency, and rate limits. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-133","title":"Document 133: APIs","text":"This document is about APIs: pagination, idempotency, and rate limits. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-134","title":"Document 134: APIs","text":"This document is about APIs: pagination, idempotency, and rate limits. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-135","title":"Document 135: APIs","text":"This document is about APIs: pagination, idempotency, and rate limits. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-136","title":"Document 136: APIs","text":"This document is about APIs: pagination, idempotency, and rate limits. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-137","title":"Document 137: APIs","text":"This document is about APIs: pagination, idempotency, and rate limits. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-138","title":"Document 138: APIs","text":"This document is about APIs: pagination, idempotency, and rate limits. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-139","title":"Document 139: APIs","text":"This document is about APIs: pagination, idempotency, and rate limits. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-140","title":"Document 140: pipelines","text":"This document is about pipelines: orchestration, retries, and idempotent steps. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-141","title":"Document 141: pipelines","text":"This document is about pipelines: orchestration, retries, and idempotent steps. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-142","title":"Document 142: pipelines","text":"This document is about pipelines: orchestration, retries, and idempotent steps. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-143","title":"Document 143: pipelines","text":"This document is about pipelines: orchestration, retries, and idempotent steps. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-144","title":"Document 144: pipelines","text":"This document is about pipelines: orchestration, retries, and idempotent steps. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-145","title":"Document 145: pipelines","text":"This document is about pipelines: orchestration, retries, and idempotent steps. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-146","title":"Document 146: pipelines","text":"This document is about pipelines: orchestration, retries, and idempotent steps. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-147","title":"Document 147: pipelines","text":"This document is about pipelines: orchestration, retries, and idempotent steps. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-148","title":"Document 148: pipelines","text":"This document is about pipelines: orchestration, retries, and idempotent steps. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-149","title":"Document 149: pipelines","text":"This document is about pipelines: orchestration, retries, and idempotent steps. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-150","title":"Document 150: embeddings","text":"This document is about embeddings: similarity search, indexing, and drift. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-151","title":"Document 151: embeddings","text":"This document is about embeddings: similarity search, indexing, and drift. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-152","title":"Document 152: embeddings","text":"This document is about embeddings: similarity search, indexing, and drift. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-153","title":"Document 153: embeddings","text":"This document is about embeddings: similarity search, indexing, and drift. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-154","title":"Document 154: embeddings","text":"This document is about embeddings: similarity search, indexing, and drift. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-155","title":"Document 155: embeddings","text":"This document is about embeddings: similarity search, indexing, and drift. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-156","title":"Document 156: embeddings","text":"This document is about embeddings: similarity search, indexing, and drift. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-157","title":"Document 157: embeddings","text":"This document is about embeddings: similarity search, indexing, and drift. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-158","title":"Document 158: embeddings","text":"This document is about embeddings: similarity search, indexing, and drift. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-159","title":"Document 159: embeddings","text":"This document is about embeddings: similarity search, indexing, and drift. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-160","title":"Document 160: evaluation","text":"This document is about evaluation: labeled sets, offline metrics, and A/B tests. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-161","title":"Document 161: evaluation","text":"This document is about evaluation: labeled sets, offline metrics, and A/B tests. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-162","title":"Document 162: evaluation","text":"This document is about evaluation: labeled sets, offline metrics, and A/B tests. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-163","title":"Document 163: evaluation","text":"This document is about evaluation: labeled sets, offline metrics, and A/B tests. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-164","title":"Document 164: evaluation","text":"This document is about evaluation: labeled sets, offline metrics, and A/B tests. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-165","title":"Document 165: evaluation","text":"This document is about evaluation: labeled sets, offline metrics, and A/B tests. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-166","title":"Document 166: evaluation","text":"This document is about evaluation: labeled sets, offline metrics, and A/B tests. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-167","title":"Document 167: evaluation","text":"This document is about evaluation: labeled sets, offline metrics, and A/B tests. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-168","title":"Document 168: evaluation","text":"This document is about evaluation: labeled sets, offline metrics, and A/B tests. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-169","title":"Document 169: evaluation","text":"This document is about evaluation: labeled sets, offline metrics, and A/B tests. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-170","title":"Document 170: routing","text":"This document is about routing: choosing tools and strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-171","title":"Document 171: routing","text":"This document is about routing: choosing tools and strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-172","title":"Document 172: routing","text":"This document is about routing: choosing tools and strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-173","title":"Document 173: routing","text":"This document is about routing: choosing tools and strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-174","title":"Document 174: routing","text":"This document is about routing: choosing tools and strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-175","title":"Document 175: routing","text":"This document is about routing: choosing tools and strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-176","title":"Document 176: routing","text":"This document is about routing: choosing tools and strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-177","title":"Document 177: routing","text":"This document is about routing: choosing tools and strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-178","title":"Document 178: routing","text":"This document is about routing: choosing tools and strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-179","title":"Document 179: routing","text":"This document is about routing: choosing tools and strategies. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-180","title":"Document 180: latency","text":"This document is about latency: p95, p99, and tail amplification. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-181","title":"Document 181: latency","text":"This document is about latency: p95, p99, and tail amplification. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-182","title":"Document 182: latency","text":"This document is about latency: p95, p99, and tail amplification. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-183","title":"Document 183: latency","text":"This document is about latency: p95, p99, and tail amplification. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-184","title":"Document 184: latency","text":"This document is about latency: p95, p99, and tail amplification. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-185","title":"Document 185: latency","text":"This document is about latency: p95, p99, and tail amplification. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-186","title":"Document 186: latency","text":"This document is about latency: p95, p99, and tail amplification. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-187","title":"Document 187: latency","text":"This document is about latency: p95, p99, and tail amplification. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-188","title":"Document 188: latency","text":"This document is about latency: p95, p99, and tail amplification. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-189","title":"Document 189: latency","text":"This document is about latency: p95, p99, and tail amplification. It is a generic note for the toy corpus."}
+{"doc_id":"DOC-190","title":"Document 190: incident IDs","text":"This document mentions unique identifiers like TKT-77319 and INC-49217. Those tokens are designed to be rare and should favor keyword search."}
+{"doc_id":"DOC-191","title":"Document 191: incident IDs","text":"This document mentions unique identifiers like TKT-77320 and INC-49218. Those tokens are designed to be rare and should favor keyword search."}
+{"doc_id":"DOC-192","title":"Document 192: incident IDs","text":"This document mentions unique identifiers like TKT-77321 and INC-49219. Those tokens are designed to be rare and should favor keyword search."}
+{"doc_id":"DOC-193","title":"Document 193: incident IDs","text":"This document mentions unique identifiers like TKT-77322 and INC-49220. Those tokens are designed to be rare and should favor keyword search."}
+{"doc_id":"DOC-194","title":"Document 194: incident IDs","text":"This document mentions unique identifiers like TKT-77323 and INC-49221. Those tokens are designed to be rare and should favor keyword search."}
+{"doc_id":"DOC-195","title":"Document 195: incident IDs","text":"This document mentions unique identifiers like TKT-77324 and INC-49222. Those tokens are designed to be rare and should favor keyword search."}
+{"doc_id":"DOC-196","title":"Document 196: incident IDs","text":"This document mentions unique identifiers like TKT-77325 and INC-49223. Those tokens are designed to be rare and should favor keyword search."}
+{"doc_id":"DOC-197","title":"Document 197: incident IDs","text":"This document mentions unique identifiers like TKT-77326 and INC-49224. Those tokens are designed to be rare and should favor keyword search."}
+{"doc_id":"DOC-198","title":"Document 198: incident IDs","text":"This document mentions unique identifiers like TKT-77327 and INC-49225. Those tokens are designed to be rare and should favor keyword search."}
+{"doc_id":"DOC-199","title":"Document 199: incident IDs","text":"This document mentions unique identifiers like TKT-77328 and INC-49226. Those tokens are designed to be rare and should favor keyword search."}
+
+

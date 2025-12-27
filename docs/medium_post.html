@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Beyond Vector Search: Designing Agentic AI Systems with Learned Retrieval</title>
+    <style>
+      :root {
+        --bg: #0b1020;
+        --panel: #101a33;
+        --stroke: rgba(255, 255, 255, 0.18);
+        --text: rgba(255, 255, 255, 0.92);
+        --muted: rgba(255, 255, 255, 0.72);
+        --accent: #7aa2f7;
+        --good: #9ece6a;
+        --warn: #e0af68;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+          "Apple Color Emoji", "Segoe UI Emoji";
+        background: radial-gradient(1200px 800px at 20% 10%, rgba(122, 162, 247, 0.18), transparent 60%),
+          radial-gradient(900px 600px at 80% 20%, rgba(158, 206, 106, 0.12), transparent 55%),
+          var(--bg);
+        color: var(--text);
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      code,
+      pre {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+          monospace;
+      }
+      .wrap {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 34px 18px 60px;
+      }
+      .top {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 14px;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 18px;
+      }
+      .pill {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--stroke);
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+      .card {
+        background: linear-gradient(180deg, rgba(16, 26, 51, 0.82), rgba(16, 26, 51, 0.64));
+        border: 1px solid var(--stroke);
+        border-radius: 16px;
+        padding: 18px;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+      }
+      h1 {
+        margin: 6px 0 6px;
+        font-size: 28px;
+        line-height: 1.2;
+        letter-spacing: 0.2px;
+      }
+      .subtitle {
+        margin: 0 0 14px;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.55;
+      }
+      hr {
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        margin: 18px 0;
+      }
+      h2 {
+        margin: 22px 0 10px;
+        font-size: 18px;
+        letter-spacing: 0.2px;
+      }
+      p {
+        margin: 10px 0;
+        color: var(--text);
+        font-size: 15px;
+        line-height: 1.75;
+      }
+      ul {
+        margin: 10px 0 10px 18px;
+        color: var(--text);
+        font-size: 15px;
+        line-height: 1.75;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .callout {
+        border: 1px solid rgba(122, 162, 247, 0.32);
+        background: rgba(122, 162, 247, 0.10);
+        padding: 12px 12px;
+        border-radius: 14px;
+        margin: 14px 0;
+      }
+      .callout strong {
+        color: rgba(255, 255, 255, 0.95);
+      }
+      .diagram-card {
+        margin: 12px 0 6px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(0, 0, 0, 0.12);
+        padding: 12px;
+      }
+      .diagram-caption {
+        margin-top: 8px;
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+      .foot {
+        margin-top: 18px;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+      .katex-fallback {
+        margin: 10px 0;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px dashed rgba(255, 255, 255, 0.22);
+        background: rgba(255, 255, 255, 0.04);
+        color: rgba(255, 255, 255, 0.86);
+        font-size: 13px;
+        line-height: 1.55;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="top">
+        <div class="pill"><strong>Medium-ready HTML</strong> (self-contained)</div>
+        <div class="pill">
+          <strong>Code:</strong>
+          <!-- Replace this with your real repo URL before publishing -->
+          <a href="https://github.com/mic2004/beyond-vector-search">github.com/mic2004/beyond-vector-search</a>
+        </div>
+        <div class="pill">
+          <strong>Diagram:</strong> <a href="../diagrams/architecture.html">diagrams/architecture.html</a>
+        </div>
+      </div>
+
+      <article class="card">
+        <h1>Beyond Vector Search: Designing Agentic AI Systems with Learned Retrieval</h1>
+        <p class="subtitle">
+          <strong>Subtitle:</strong> Retrieval isn’t a component anymore—it’s a decision layer with feedback,
+          telemetry, and guardrails.
+        </p>
+
+        <hr />
+
+        <h2>1) The uncomfortable truth: static retrieval breaks in agentic workflows</h2>
+        <p>
+          Vector search + vanilla RAG works surprisingly well when the workflow is: “one query, one retrieval, one
+          answer.”
+        </p>
+        <p>Agentic systems aren’t that workflow.</p>
+        <p>
+          Agents retrieve <strong>multiple times</strong> across a plan: to choose tools, to fill parameters, to
+          validate intermediate state, to recover from errors. A small miss early doesn’t just produce a slightly
+          worse answer—it becomes a <strong>compounding error</strong>:
+        </p>
+        <ul>
+          <li><strong>Bad context → wrong plan</strong>: the agent selects the wrong tool or wrong sequence.</li>
+          <li><strong>Wrong plan → worse queries</strong>: the next retrieval is conditioned on earlier mistakes.</li>
+          <li><strong>Worse queries → wider drift</strong>: the system spends latency and cost walking away from ground truth.</li>
+        </ul>
+        <p>
+          In this regime, “better embeddings” is not a complete strategy. You need a system that can decide
+          <strong>how</strong> to retrieve for each step, and improve that decision over time.
+        </p>
+
+        <hr />
+
+        <h2>2) Learned/adaptive retrieval, defined as a systems decision problem</h2>
+        <p>
+          In systems terms, <em>learned retrieval</em> is not “a fancy retriever.” It’s the framing that retrieval is a
+          <strong>policy</strong>:
+        </p>
+        <div class="katex-fallback">
+          π(query, context, history) → retrieval_strategy
+          <div class="muted" style="margin-top: 6px">
+            (Rendered as plain text to keep this HTML fully self-contained—no external math libraries.)
+          </div>
+        </div>
+        <p>Where “strategy” could be:</p>
+        <ul>
+          <li>keyword/BM25-like search</li>
+          <li>vector similarity search</li>
+          <li>hybrid retrieval</li>
+          <li>metadata filters</li>
+          <li>recency-biased search</li>
+          <li>graph traversal / entity retrieval</li>
+        </ul>
+        <p>The core move is to make that choice <strong>explicit</strong>, and to back it with:</p>
+        <ul>
+          <li><strong>features you can compute at runtime</strong></li>
+          <li><strong>telemetry you can audit</strong></li>
+          <li><strong>evaluation feedback that updates the policy</strong></li>
+        </ul>
+        <p>
+          That’s what this repo demonstrates in minimal form:
+          <strong>router → (vector | keyword) → context → answer</strong>, with a small evaluator that updates routing
+          weights and logs everything to SQLite.
+        </p>
+
+        <hr />
+
+        <h2 id="architecture">3) Reference architecture: retrieval routing + feedback loop</h2>
+        <p>The architecture is intentionally small, but it mirrors the shape of real systems.</p>
+        <div class="callout">
+          <strong>Diagram 1 (overview)</strong>:
+          embedded below (and also available as <a href="../diagrams/architecture.html">diagrams/architecture.html</a>).
+        </div>
+
+        <div class="diagram-card" aria-label="Embedded architecture diagram">
+          <!-- Inline SVG copied from diagrams/architecture.html (self-contained, no external assets) -->
+          <svg viewBox="0 0 1040 520" width="100%" height="auto" role="img" aria-label="Adaptive retrieval router architecture diagram">
+            <defs>
+              <linearGradient id="boxFill" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.08)"></stop>
+                <stop offset="100%" stop-color="rgba(255,255,255,0.04)"></stop>
+              </linearGradient>
+              <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="rgba(0,0,0,0.45)" />
+              </filter>
+              <marker id="arrow" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(255,255,255,0.65)"></path>
+              </marker>
+              <style>
+                .box { fill: url(#boxFill); stroke: rgba(255,255,255,0.22); stroke-width: 1.2; rx: 14; filter: url(#shadow); }
+                .box2 { fill: rgba(122,162,247,0.10); stroke: rgba(122,162,247,0.55); stroke-width: 1.3; rx: 14; filter: url(#shadow); }
+                .box3 { fill: rgba(158,206,106,0.10); stroke: rgba(158,206,106,0.55); stroke-width: 1.3; rx: 14; filter: url(#shadow); }
+                .label { fill: rgba(255,255,255,0.92); font: 650 14px ui-sans-serif, system-ui; }
+                .small { fill: rgba(255,255,255,0.70); font: 12px ui-sans-serif, system-ui; }
+                .arrow { stroke: rgba(255,255,255,0.60); stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+                .arrow2 { stroke: rgba(122,162,247,0.80); stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+                .arrow3 { stroke: rgba(158,206,106,0.80); stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+                .dashed { stroke-dasharray: 7 7; }
+                .cap { fill: rgba(255,255,255,0.62); font: 11px ui-sans-serif, system-ui; }
+              </style>
+            </defs>
+
+            <rect class="box" x="40" y="52" width="170" height="70" />
+            <text class="label" x="60" y="82">User Query</text>
+            <text class="small" x="60" y="104">Natural language / IDs</text>
+
+            <rect class="box2" x="260" y="42" width="200" height="90" />
+            <text class="label" x="280" y="74">Router</text>
+            <text class="small" x="280" y="96">features + learned bias</text>
+            <text class="small" x="280" y="116">selects strategy per query</text>
+
+            <rect class="box" x="520" y="18" width="220" height="90" />
+            <text class="label" x="540" y="50">Vector Retriever</text>
+            <text class="small" x="540" y="72">char n-gram TF‑IDF</text>
+            <text class="small" x="540" y="92">fuzzy similarity</text>
+
+            <rect class="box" x="520" y="134" width="220" height="90" />
+            <text class="label" x="540" y="166">Keyword Retriever</text>
+            <text class="small" x="540" y="188">BM25-like scoring</text>
+            <text class="small" x="540" y="208">exact match bias</text>
+
+            <rect class="box3" x="790" y="62" width="210" height="80" />
+            <text class="label" x="810" y="92">Context Builder</text>
+            <text class="small" x="810" y="114">top‑k passages</text>
+
+            <rect class="box3" x="790" y="170" width="210" height="80" />
+            <text class="label" x="810" y="200">Answer Generator</text>
+            <text class="small" x="810" y="222">template-based</text>
+
+            <rect class="box" x="520" y="300" width="220" height="85" />
+            <text class="label" x="540" y="332">Evaluator</text>
+            <text class="small" x="540" y="354">hit@k + exact match</text>
+            <text class="small" x="540" y="374">(toy proxy)</text>
+
+            <rect class="box" x="260" y="300" width="200" height="85" />
+            <text class="label" x="280" y="332">Feedback Store</text>
+            <text class="small" x="280" y="354">router weights</text>
+            <text class="small" x="280" y="374">(+ eval history)</text>
+
+            <rect class="box" x="790" y="300" width="210" height="85" />
+            <text class="label" x="810" y="332">Logging / Telemetry</text>
+            <text class="small" x="810" y="354">SQLite: query,</text>
+            <text class="small" x="810" y="374">strategy, score</text>
+
+            <path class="arrow" d="M 210 87 L 260 87" />
+            <text class="cap" x="220" y="74">request</text>
+
+            <path class="arrow2" d="M 460 70 L 520 60" />
+            <text class="cap" x="468" y="54">route (vector)</text>
+            <path class="arrow2 dashed" d="M 460 104 L 520 170" />
+            <text class="cap" x="468" y="136">route (keyword)</text>
+
+            <path class="arrow" d="M 740 72 L 790 102" />
+            <path class="arrow" d="M 740 180 L 790 202" />
+
+            <path class="arrow3" d="M 895 142 L 895 170" />
+            <text class="cap" x="905" y="162">context → answer</text>
+
+            <path class="arrow" d="M 895 250 L 895 300" />
+            <text class="cap" x="905" y="286">log run</text>
+
+            <path class="arrow" d="M 895 250 C 895 270 740 270 630 300" />
+            <text class="cap" x="760" y="274">evaluate (offline)</text>
+
+            <path class="arrow3" d="M 630 385 L 360 385" />
+            <text class="cap" x="470" y="402">write feedback</text>
+
+            <path class="arrow3" d="M 360 300 C 360 250 360 180 360 132" />
+            <text class="cap" x="372" y="210">update policy</text>
+
+            <path class="arrow3 dashed" d="M 360 132 C 360 120 360 110 360 100" />
+
+            <text class="small" x="40" y="500">
+              Key idea: routing is a decision problem; evaluation feeds back into routing weights over time.
+            </text>
+          </svg>
+          <div class="diagram-caption">
+            Flow: query → router → (vector/keyword) → context → answer. Loop: evaluator → feedback store → router.
+            Telemetry logs every run to SQLite.
+          </div>
+        </div>
+
+        <ul>
+          <li>Flow: <em>User Query → Router → (Vector Retriever / Keyword Retriever) → Context Builder → Answer Generator</em></li>
+          <li>Loop: <em>Evaluator → Feedback Store → Router</em> (policy update)</li>
+          <li>Sidecar: <em>Logging/Telemetry store</em></li>
+        </ul>
+        <p>
+          In production, the “Answer Generator” would be your LLM layer. The important point is that the router and
+          feedback loop sit <em>around</em> it, turning retrieval into a measurable decision layer instead of a fixed
+          dependency.
+        </p>
+
+        <hr />
+
+        <h2 id="code-paths">Selected code paths (minimal but real)</h2>
+        <p>
+          This project is intentionally small, so you can point to the exact lines where “learned retrieval” lives.
+        </p>
+
+        <div class="callout">
+          <strong>Router decision</strong> (features + learned bias → strategy)
+          <div class="muted" style="margin-top: 6px">Source: <code>src/beyond_vector_search/router.py</code></div>
+        </div>
+        <pre class="katex-fallback" style="white-space: pre; font-size: 12.5px"><code>strategy, feats, meta = router.choose(query)
+
+heuristic_keyword = (
+    1.25 * feats.digit_ratio
+    + 1.00 * feats.oov_ratio
+    + 1.25 * feats.rare_ratio
+    + (0.10 if feats.n_tokens &lt;= 3 else 0.0)
+)
+heuristic_vector = 0.50 * (1.0 - min(1.0, feats.oov_ratio + feats.rare_ratio))
+
+score_keyword = heuristic_keyword + state.weight_keyword
+score_vector = heuristic_vector + state.weight_vector
+strategy = "keyword" if score_keyword &gt;= score_vector else "vector"</code></pre>
+
+        <div class="callout">
+          <strong>Feedback update</strong> (bandit-style push toward the better arm)
+          <div class="muted" style="margin-top: 6px">Source: <code>src/beyond_vector_search/router.py</code></div>
+        </div>
+        <pre class="katex-fallback" style="white-space: pre; font-size: 12.5px"><code>if score_keyword &gt; score_vector:
+    st.weight_keyword += st.lr
+    st.weight_vector -= st.lr
+elif score_vector &gt; score_keyword:
+    st.weight_vector += st.lr
+    st.weight_keyword -= st.lr</code></pre>
+
+        <div class="callout">
+          <strong>Offline evaluation loop</strong> (score both, then update + log)
+          <div class="muted" style="margin-top: 6px">Source: <code>src/beyond_vector_search/evaluate.py</code></div>
+        </div>
+        <pre class="katex-fallback" style="white-space: pre; font-size: 12.5px"><code>top_vec = vec.search(lab.query, k=k)
+top_key = key.search(lab.query, k=k)
+
+s_vec = evaluate_run(...)
+s_key = evaluate_run(...)
+
+chosen, feats, route_meta = router.choose(lab.query)
+router.update_from_pairwise(score_vector=s_vec.total, score_keyword=s_key.total)
+db.log_run(query=lab.query, strategy=chosen, score=chosen_scores.total, meta={...})</code></pre>
+
+        <hr />
+
+        <h2>4) Why two retrievers are the minimum viable reality check</h2>
+        <p>
+          If you only have one retrieval strategy, you can’t learn routing—you can only learn “how to tune that one
+          thing.”
+        </p>
+        <p>Two strategies create disagreement, and disagreement is where learning becomes visible:</p>
+        <ul>
+          <li>
+            <strong>Keyword/BM25-like</strong> tends to dominate when:
+            <ul>
+              <li>the query includes IDs, codes, incident numbers, tickets</li>
+              <li>the important signal is in rare tokens (“exactness matters”)</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Vector-ish similarity</strong> tends to dominate when:
+            <ul>
+              <li>users paraphrase, abbreviate, or change formatting</li>
+              <li>the important signal is semantic and distributed</li>
+            </ul>
+          </li>
+        </ul>
+        <p>This repo uses:</p>
+        <ul>
+          <li><strong>Keyword retriever</strong>: BM25-like scoring (token exact-match bias)</li>
+          <li><strong>Vector retriever</strong>: character n-gram TF‑IDF cosine similarity (cheap “fuzzy” vector proxy)</li>
+        </ul>
+        <p>
+          That pairing is deliberate: it creates realistic trade-offs without external services or heavy dependencies.
+        </p>
+
+        <hr />
+
+        <h2>5) Failure modes and trade-offs (what breaks when you add learning)</h2>
+        <p>
+          Adding a router + feedback loop makes retrieval <em>more powerful</em>, but it also creates new failure modes.
+          A few that matter in real deployments:
+        </p>
+        <ul>
+          <li>
+            <strong>Latency overhead</strong>
+            <ul>
+              <li>Scoring multiple retrievers increases compute and tail latency.</li>
+              <li>Mitigation: route first using cheap features, run only the chosen retriever online; score both arms offline.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Evaluation noise</strong>
+            <ul>
+              <li>If the evaluator is weak or inconsistent, it will push the policy in the wrong direction.</li>
+              <li>Mitigation: start with deterministic proxies + curated labeled sets; gate changes; measure regret.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Policy oscillation</strong>
+            <ul>
+              <li>Small datasets or shifting traffic patterns can cause “thrash.”</li>
+              <li>Mitigation: bounded updates, smoothing, minimum data thresholds, canarying.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Mismatch between offline and online reality</strong>
+            <ul>
+              <li>Your offline queries may not represent agent steps, tool calls, or user behavior.</li>
+              <li>Mitigation: log real traces, sample them, label the hard cases, and continuously refresh eval sets.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Metric gaming</strong>
+            <ul>
+              <li>If the policy optimizes an easy proxy (e.g., exact match), it may hurt real task success.</li>
+              <li>Mitigation: layer metrics: evidence retrieval quality + answer faithfulness + task success.</li>
+            </ul>
+          </li>
+        </ul>
+
+        <hr />
+
+        <h2>6) Implementation Strategy (2–3 weeks): build order that ships</h2>
+        <p>
+          If you’re starting from a working RAG/agent system, the first iteration should be about
+          <strong>observability and controllability</strong>, not “learning” in the ML sense.
+        </p>
+        <p>Here’s a realistic build order:</p>
+        <ul>
+          <li>
+            <strong>Week 1: make retrieval decisions visible</strong>
+            <ul>
+              <li>Introduce a router interface (even if it’s heuristic-only).</li>
+              <li>Log: query, chosen strategy, top‑k doc IDs, latency, and a “success” proxy.</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Week 2: introduce offline evaluation</strong>
+            <ul>
+              <li>Build a labeled set from real traces (plus synthetic ID-heavy cases).</li>
+              <li>Score both strategies offline.</li>
+              <li>Track: win-rate of each strategy by query segment (IDs vs natural language, short vs long).</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Week 3: close the feedback loop carefully</strong>
+            <ul>
+              <li>Add policy updates (bandit-style or weighted scoring) behind guardrails.</li>
+              <li>Roll out as: offline-only → shadow mode → canary → default.</li>
+            </ul>
+          </li>
+        </ul>
+        <p>
+          This repo is a toy, but it includes the end-to-end mechanics: an evaluator that scores both retrievers and
+          updates router weights, plus SQLite telemetry so you can inspect outcomes.
+        </p>
+
+        <hr />
+
+        <h2>7) Measurement + Guardrails (what to track so it doesn’t drift)</h2>
+        <p>If you want learned retrieval to improve an agent, measure at multiple layers:</p>
+        <ul>
+          <li>
+            <strong>Evidence quality</strong>
+            <ul>
+              <li>hit@k / recall@k on labeled evidence</li>
+              <li>citation coverage (does the final answer cite retrieved evidence?)</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Answer quality</strong>
+            <ul>
+              <li>faithfulness / groundedness checks</li>
+              <li>exact match (only for toy or strict domains)</li>
+            </ul>
+          </li>
+          <li>
+            <strong>Router quality</strong>
+            <ul>
+              <li>regret: chosen strategy vs best strategy (offline)</li>
+              <li>calibration: confidence vs outcomes</li>
+              <li>stability: how often policy flips week-over-week</li>
+            </ul>
+          </li>
+          <li>
+            <strong>System health</strong>
+            <ul>
+              <li>p95/p99 latency per stage</li>
+              <li>cost per successful task (especially in multi-step loops)</li>
+              <li>drift signals: routing distribution changes by segment</li>
+            </ul>
+          </li>
+        </ul>
+
+        <hr />
+
+        <h2>8) Proof (so it doesn’t stay conceptual)</h2>
+        <ul>
+          <li>
+            <strong>Repo</strong>:
+            <a href="https://github.com/mic2004/beyond-vector-search">beyond-vector-search</a>
+            <span class="muted">(toy but runnable end-to-end, CPU-only)</span>
+          </li>
+          <li><strong>Architecture diagram included</strong>: <a href="../diagrams/architecture.html">diagrams/architecture.html</a></li>
+          <li><strong>Next</strong>: extend evaluator + learned router using your real traces and task-success metrics</li>
+        </ul>
+
+        <hr />
+
+        <h2>Conclusion: treat retrieval like a policy, not a dependency</h2>
+        <p>
+          Agentic AI systems don’t fail because vector search is “bad.” They fail because the system treats retrieval as
+          a static primitive in a dynamic, multi-step decision process.
+        </p>
+        <p>If you want agents that improve over time, you need:</p>
+        <ul>
+          <li>multiple retrieval strategies</li>
+          <li>a router that can explain its choice</li>
+          <li>telemetry that makes outcomes inspectable</li>
+          <li>an evaluation loop that updates policy safely</li>
+        </ul>
+        <p>
+          If you want a minimal reference implementation to start from, run the repo and open the diagram:
+          <a href="../diagrams/architecture.html">diagrams/architecture.html</a>.
+        </p>
+
+        <hr />
+
+        <h2>Further Reading (topics/papers)</h2>
+        <ul>
+          <li>Multi-armed bandits for decision-making under uncertainty</li>
+          <li>Learning to retrieve / query routing</li>
+          <li>Hybrid retrieval (BM25 + dense) and late interaction models</li>
+          <li>RAG evaluation: faithfulness/groundedness, citation-based checks</li>
+          <li>Agent evaluation: task success metrics, trajectory scoring, tool-use reliability</li>
+        </ul>
+
+        <p class="foot">
+          Note: Medium often strips custom HTML embeds. This file is best for hosting via GitHub Pages or sharing as a
+          standalone article page; for Medium, paste the Markdown from <code>docs/medium_post.md</code> and link to the
+          hosted diagram.
+        </p>
+      </article>
+    </div>
+  </body>
+</html>
+
+

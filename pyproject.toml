@@ -1,0 +1,26 @@
+[project]
+name = "beyond-vector-search"
+version = "0.1.0"
+description = "Beyond vector search: a minimal adaptive retrieval router with evaluation feedback and SQLite telemetry."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [{ name = "Your Name" }]
+
+# Intentionally dependency-free: the implementation uses only Python stdlib.
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/mic2004/beyond-vector-search"
+
+[build-system]
+requires = ["hatchling>=1.22.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/beyond_vector_search"]
+
+[tool.ruff]
+line-length = 100
+
+
