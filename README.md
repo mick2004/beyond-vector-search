@@ -8,6 +8,18 @@
 - Architecture diagram: open `diagrams/architecture.html` locally (or via GitHub Pages).
 - No external downloads, no network calls, CPU-only.
 
+## Architecture
+
+**High-level architecture (rendered in GitHub):**
+
+![Architecture diagram](diagrams/architecture.svg)
+
+**Feedback loop (why this is “learned retrieval”):**
+
+![Feedback loop diagram](diagrams/feedback_loop.svg)
+
+For the interactive/self-contained version, open `diagrams/architecture.html`.
+
 ## Quickstart (CPU, end-to-end)
 
 Prereqs: **Python 3.11+**

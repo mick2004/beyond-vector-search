@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 220" width="980" height="220" role="img" aria-label="Retrieval routing feedback loop diagram">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(255,255,255,0.75)"/>
+    </marker>
+    <style>
+      .bg { fill: #0b1020; }
+      .box { fill: rgba(255,255,255,0.06); stroke: rgba(255,255,255,0.20); stroke-width: 1.2; }
+      .accent { fill: rgba(122,162,247,0.12); stroke: rgba(122,162,247,0.60); stroke-width: 1.2; }
+      .good { fill: rgba(158,206,106,0.12); stroke: rgba(158,206,106,0.60); stroke-width: 1.2; }
+      .label { fill: rgba(255,255,255,0.92); font: 650 14px ui-sans-serif, system-ui; }
+      .small { fill: rgba(255,255,255,0.72); font: 12px ui-sans-serif, system-ui; }
+      .arrow { stroke: rgba(255,255,255,0.70); stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+      .dashed { stroke-dasharray: 7 7; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="980" height="220"/>
+
+  <!-- Boxes -->
+  <rect class="accent" x="40" y="70" width="180" height="70" rx="14"/>
+  <text class="label" x="60" y="100">Router</text>
+  <text class="small" x="60" y="122">policy + weights</text>
+
+  <rect class="box" x="270" y="70" width="210" height="70" rx="14"/>
+  <text class="label" x="290" y="100">Retriever(s)</text>
+  <text class="small" x="290" y="122">vector / keyword / …</text>
+
+  <rect class="good" x="530" y="70" width="190" height="70" rx="14"/>
+  <text class="label" x="550" y="100">Evaluator</text>
+  <text class="small" x="550" y="122">score outcomes</text>
+
+  <rect class="box" x="760" y="70" width="180" height="70" rx="14"/>
+  <text class="label" x="780" y="100">Telemetry</text>
+  <text class="small" x="780" y="122">Delta/SQLite</text>
+
+  <!-- Arrows -->
+  <path class="arrow" d="M 220 105 L 270 105"/>
+  <path class="arrow" d="M 480 105 L 530 105"/>
+  <path class="arrow" d="M 720 105 L 760 105"/>
+
+  <!-- Feedback loop back to router -->
+  <path class="arrow dashed" d="M 625 70 C 625 25 130 25 130 70"/>
+  <text class="small" x="290" y="36">feedback update (offline / gated)</text>
+</svg>
+
+
