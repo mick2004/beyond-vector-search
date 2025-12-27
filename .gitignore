@@ -1,3 +1,14 @@
+#
+# beyond-vector-search
+#
+# Blog + diagram references (kept in-repo; do NOT ignore):
+# - Blog (Markdown): docs/medium_post.md
+# - Blog (self-contained HTML): docs/medium_post.html
+# - Architecture diagram (self-contained HTML/SVG): diagrams/architecture.html
+# - Databricks demo notebook: notebooks/databricks_demo.ipynb
+#
+
+# --- Python bytecode / caches ---
 __pycache__/
 *.py[cod]
 *.pyo
@@ -6,13 +17,25 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/
+
+# --- Virtualenvs / packaging outputs ---
 .venv/
 venv/
 dist/
 build/
 *.egg-info/
 
-# Runtime artifacts
+# --- OS / editor noise ---
+.DS_Store
+.idea/
+.vscode/
+.ipynb_checkpoints/
+
+# --- Databricks workspace artifacts (optional) ---
+.databricks/
+
+# --- Runtime artifacts (generated locally) ---
+# Contains SQLite telemetry DB when using the default local backend.
 runs/
 
 
