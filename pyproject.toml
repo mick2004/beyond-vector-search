@@ -11,7 +11,7 @@ authors = [{ name = "Your Name" }]
 dependencies = []
 
 [project.urls]
-Repository = "https://github.com/mic2004/beyond-vector-search"
+Repository = "https://github.com/mick2004/beyond-vector-search"
 
 [build-system]
 requires = ["hatchling>=1.22.0"]

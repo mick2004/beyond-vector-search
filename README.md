@@ -2,7 +2,7 @@
 
 **Beyond vector search**: a tiny, runnable reference implementation of an **adaptive retrieval router** (vector vs keyword) with an **evaluation feedback loop** and **local SQLite telemetry**—built to illustrate how “learned retrieval” fits into agentic RAG systems.
 
-- ![tests](https://github.com/mic2004/beyond-vector-search/actions/workflows/tests.yml/badge.svg)
+- ![tests](https://github.com/mick2004/beyond-vector-search/actions/workflows/tests.yml/badge.svg)
 - ![license](https://img.shields.io/badge/license-MIT-blue)
 
 - Architecture diagram: open `diagrams/architecture.html` locally (or via GitHub Pages).
