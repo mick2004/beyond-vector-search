@@ -6,7 +6,6 @@
 - ![license](https://img.shields.io/badge/license-MIT-blue)
 
 - Architecture diagram: open `diagrams/architecture.html` locally (or via GitHub Pages).
-- Medium post draft: `docs/medium_post.md`
 - No external downloads, no network calls, CPU-only.
 
 ## Quickstart (CPU, end-to-end)

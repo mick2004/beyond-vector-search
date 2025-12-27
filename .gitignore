@@ -8,6 +8,10 @@
 # - Databricks demo notebook: notebooks/databricks_demo.ipynb
 #
 
+# --- Publication drafts (keep local, do not publish to GitHub) ---
+# You chose Option A: remove blog/LinkedIn drafts from the public repo.
+docs/
+
 # --- Python bytecode / caches ---
 __pycache__/
 *.py[cod]
