@@ -2,7 +2,7 @@
 
 ## Databricks
 
-Use `notebooks/databricks_demo.py` to run the project inside a Databricks workspace repo checkout.
+Use `notebooks/databricks_lakebase_demo.py` to run the project inside a Databricks workspace repo checkout.
 
 What it demonstrates:
 - single query run (router → retriever → answer)

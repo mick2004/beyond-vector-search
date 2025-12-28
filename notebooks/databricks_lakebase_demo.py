@@ -1,7 +1,9 @@
 # Databricks notebook source
 # beyond-vector-search — Databricks demo (Lakebase Postgres telemetry)
 #
-# This is a Databricks-native notebook file (works reliably in Repos).
+# IMPORTANT: Databricks Repos treats notebooks with the same base name as conflicting.
+# This notebook is intentionally named `databricks_lakebase_demo.py` (not `databricks_demo.*`).
+#
 # It demonstrates:
 # - Adaptive retrieval routing (keyword / vector / hybrid)
 # - Offline evaluation loop that updates router weights
