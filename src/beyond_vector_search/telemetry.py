@@ -21,7 +21,7 @@ class TelemetryStore:
 
     Implementations:
     - SQLite (default, local/offline)
-    - Databricks Delta tables (optional, only when running in Databricks with Spark)
+    - Databricks Lakebase Postgres (OLTP)
     """
 
     def log_run(self, *, query: str, strategy: Strategy, score: float, meta: dict, ts_unix: float | None = None) -> None:
@@ -90,79 +90,6 @@ class SQLiteTelemetry(TelemetryStore):
                 "ON CONFLICT(key) DO UPDATE SET value_json = excluded.value_json",
                 (key, json.dumps(value, sort_keys=True)),
             )
-
-
-@dataclass
-class DeltaTelemetry(TelemetryStore):
-    """
-    Databricks Lakehouse backend using Delta tables.
-
-    Requires a SparkSession to exist (Databricks notebooks / clusters).
-    Uses SQL to create tables and MERGE for upserts.
-    """
-
-    runs_table: str
-    state_table: str
-
-    def _spark(self):
-        # Lazy import so local runs remain dependency-free.
-        from pyspark.sql import SparkSession  # type: ignore
-
-        return SparkSession.getActiveSession() or SparkSession.builder.getOrCreate()
-
-    def _ensure_tables(self) -> None:
-        spark = self._spark()
-        spark.sql(
-            f"""
-            CREATE TABLE IF NOT EXISTS {self.runs_table} (
-              run_id BIGINT GENERATED ALWAYS AS IDENTITY,
-              ts_unix DOUBLE,
-              query STRING,
-              strategy STRING,
-              score DOUBLE,
-              meta_json STRING
-            ) USING DELTA
-            """
-        )
-        spark.sql(
-            f"""
-            CREATE TABLE IF NOT EXISTS {self.state_table} (
-              key STRING,
-              value_json STRING
-            ) USING DELTA
-            """
-        )
-
-    def log_run(self, *, query: str, strategy: Strategy, score: float, meta: dict, ts_unix: float | None = None) -> None:
-        ts_unix = ts_unix if ts_unix is not None else time.time()
-        self._ensure_tables()
-        spark = self._spark()
-        meta_json = json.dumps(meta, sort_keys=True)
-        df = spark.createDataFrame([(float(ts_unix), query, strategy, float(score), meta_json)], ["ts_unix", "query", "strategy", "score", "meta_json"])
-        df.write.mode("append").format("delta").saveAsTable(self.runs_table)
-
-    def get_state(self, key: str, default: dict) -> dict:
-        self._ensure_tables()
-        spark = self._spark()
-        rows = spark.sql(f"SELECT value_json FROM {self.state_table} WHERE key = {json.dumps(key)} LIMIT 1").collect()
-        if not rows:
-            return default
-        return json.loads(rows[0]["value_json"])
-
-    def set_state(self, key: str, value: dict) -> None:
-        self._ensure_tables()
-        spark = self._spark()
-        value_json = json.dumps(value, sort_keys=True)
-        # MERGE upsert
-        spark.sql(
-            f"""
-            MERGE INTO {self.state_table} t
-            USING (SELECT {json.dumps(key)} AS key, {json.dumps(value_json)} AS value_json) s
-            ON t.key = s.key
-            WHEN MATCHED THEN UPDATE SET t.value_json = s.value_json
-            WHEN NOT MATCHED THEN INSERT (key, value_json) VALUES (s.key, s.value_json)
-            """
-        )
 
 
 @dataclass
@@ -267,9 +194,6 @@ def telemetry_from_env(*, sqlite_path: str | Path | None = None) -> TelemetrySto
     - Databricks Lakebase Postgres: set BVS_TELEMETRY=lakebase and provide:
         - BVS_LAKEBASE_DSN (Postgres connection string)
         - Optional: BVS_LAKEBASE_RUNS_TABLE, BVS_LAKEBASE_STATE_TABLE
-    - Databricks Delta: set BVS_TELEMETRY=delta and provide:
-        - BVS_DELTA_RUNS_TABLE (e.g. main.default.bvs_runs)
-        - BVS_DELTA_STATE_TABLE (e.g. main.default.bvs_router_state)
     """
     backend = os.environ.get("BVS_TELEMETRY", "sqlite").strip().lower()
     if backend == "lakebase":
@@ -282,10 +206,6 @@ def telemetry_from_env(*, sqlite_path: str | Path | None = None) -> TelemetrySto
         runs_table = os.environ.get("BVS_LAKEBASE_RUNS_TABLE", "beyond_vector_search_runs")
         state_table = os.environ.get("BVS_LAKEBASE_STATE_TABLE", "beyond_vector_search_router_state")
         return LakebasePostgresTelemetry(dsn=dsn, runs_table=runs_table, state_table=state_table)
-    if backend == "delta":
-        runs_table = os.environ.get("BVS_DELTA_RUNS_TABLE", "main.default.beyond_vector_search_runs")
-        state_table = os.environ.get("BVS_DELTA_STATE_TABLE", "main.default.beyond_vector_search_router_state")
-        return DeltaTelemetry(runs_table=runs_table, state_table=state_table)
     return SQLiteTelemetry(path=sqlite_path or default_sqlite_path())
 
 
