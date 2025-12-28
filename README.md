@@ -20,21 +20,26 @@
 
 For the interactive/self-contained version, open `diagrams/architecture.html`.
 
-## Story: why routing matters (a real failure pattern)
+## Story: why routing matters (industry example — fintech chargebacks)
 
-Imagine an **incident triage agent** in a Databricks/enterprise setting.
+Imagine a **fintech payments ops agent** helping analysts investigate chargebacks.
 
-- A user types: “pipeline failed for `INC-49217` — what changed?”
-- The agent retrieves the wrong context (because “INC-49217” is a rare token and fuzzy similarity pulls generic “incident” docs).
-- That wrong context becomes the next-step prompt → the agent generates the wrong diagnosis → then it issues follow-up queries that **drift further**.
+The workflow is inherently multi-step:
+- Step 1: “Pull context for dispute `CB-774193` on txn `TID-88410291`.”
+- Step 2: “Why was it flagged as ‘duplicate presentment’?”
+- Step 3: “Show similar disputes and the playbook that resolved them.”
 
-With **adaptive retrieval routing**, the system:
-- detects “ID-like / rare token” query structure and routes to **keyword/BM25-like** retrieval (exact match bias)
-- uses **vector-ish similarity** for paraphrased “what is adaptive retrieval?” style questions
-- uses a **hybrid** when signals conflict
-- closes the loop with evaluation feedback so the policy improves instead of repeating the same miss
+Where static retrieval breaks:
+- Those IDs (`CB-…`, `TID-…`) are **rare tokens**. If a fuzzy retriever misses them and returns generic “chargeback overview” docs, the agent’s next-step reasoning is anchored on the wrong case.
+- That wrong context compounds: the agent picks the wrong policy, sends the wrong follow-up query, and drifts further from the actual dispute record.
 
-This is the core benefit: **retrieval stops being a static dependency and becomes a measurable decision layer.**
+With **adaptive retrieval routing**, the system behaves more like a real ops tool:
+- **Keyword/BM25-like** for ID-heavy lookups (exact match bias: case IDs, txn IDs)
+- **Vector-ish similarity** for paraphrased policy questions (“what counts as duplicate presentment?”)
+- **Hybrid** when the query mixes IDs + natural language (retrieve the case *and* the relevant policy)
+- **Feedback loop**: evaluation outcomes update routing weights so the system improves rather than repeating the same failure mode
+
+Core benefit: **retrieval stops being a static dependency and becomes a measurable decision layer** in an agentic workflow.
 
 ## Quickstart (CPU, end-to-end)
 
