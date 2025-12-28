@@ -23,6 +23,20 @@ class TestRouter(unittest.TestCase):
             self.assertEqual(strat, "keyword")
             self.assertGreaterEqual(feats.digit_ratio, 0.0)
 
+    def test_router_prefers_hybrid_for_mixed_id_and_text(self) -> None:
+        # Mixed query: one ID-like token plus enough natural language where fuzzy similarity can help.
+        query = "pipeline failed for INC-10010 cache stampede"
+        with tempfile.TemporaryDirectory() as td:
+            db_path = str(Path(td) / "test.sqlite")
+            router = AdaptiveRouter.build(
+                vocab={"pipeline", "failed", "for", "cache", "stampede"},
+                rare_terms={"inc-10010"},
+                db_path=db_path,
+            )
+            router.save_state(RouterState(weight_vector=0.0, weight_keyword=0.0, weight_hybrid=0.0, lr=0.5))
+            strat, _feats, _meta = router.choose(query)
+            self.assertEqual(strat, "hybrid")
+
     def test_router_adapts_when_keyword_wins(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             db_path = str(Path(td) / "test.sqlite")
