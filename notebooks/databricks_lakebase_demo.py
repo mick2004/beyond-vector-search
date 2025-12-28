@@ -60,6 +60,20 @@ print("Runs table:", os.environ.get("BVS_LAKEBASE_RUNS_TABLE"))
 print("State table:", os.environ.get("BVS_LAKEBASE_STATE_TABLE"))
 
 # COMMAND ----------
+# --- Provision Lakebase tables (CREATE TABLE IF NOT EXISTS) ---
+# This ensures the runs and router_state tables exist before any queries.
+
+from beyond_vector_search.telemetry import telemetry_from_env
+
+telemetry = telemetry_from_env()
+
+# Force table creation (LakebasePostgresTelemetry calls CREATE TABLE IF NOT EXISTS internally).
+# We do a no-op get_state to trigger provisioning:
+_ = telemetry.get_state("__init__", {})
+
+print("Lakebase tables provisioned (if they didn't already exist).")
+
+# COMMAND ----------
 from beyond_vector_search.run import run_once
 
 out = run_once(query="pipeline failed for INC-10010 cache stampede", k=5, db_path=None)
