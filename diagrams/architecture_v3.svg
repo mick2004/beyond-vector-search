@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 780" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="50%" style="stop-color:#16213e"/>
+      <stop offset="100%" style="stop-color:#0f3460"/>
+    </linearGradient>
+    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d4ff"/>
+      <stop offset="50%" style="stop-color:#7c3aed"/>
+      <stop offset="100%" style="stop-color:#f472b6"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="900" height="780" fill="url(#bg)"/>
+  
+  <!-- Title -->
+  <text x="450" y="45" text-anchor="middle" font-size="28" font-weight="600" fill="url(#titleGrad)">Adaptive Retrieval Router</text>
+  <text x="450" y="72" text-anchor="middle" font-size="14" fill="#94a3b8">Beyond Vector Search — Learned Routing for Agentic AI Systems</text>
+  
+  <!-- Query Box -->
+  <rect x="350" y="95" width="200" height="60" rx="12" fill="rgba(59,130,246,0.15)" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="122" text-anchor="middle" font-size="14" font-weight="600" fill="#60a5fa">📝 Query</text>
+  <text x="450" y="142" text-anchor="middle" font-size="11" fill="#94a3b8">"INC-10010 cache stampede"</text>
+  
+  <!-- Arrow 1 -->
+  <path d="M450 155 L450 175" stroke="#64748b" stroke-width="2" fill="none"/>
+  <polygon points="450,185 445,175 455,175" fill="#64748b"/>
+  
+  <!-- Router Box -->
+  <rect x="280" y="190" width="340" height="100" rx="12" fill="rgba(124,58,237,0.15)" stroke="#7c3aed" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="218" text-anchor="middle" font-size="14" font-weight="600" fill="#a78bfa">🧠 Adaptive Router</text>
+  <text x="450" y="238" text-anchor="middle" font-size="11" fill="#94a3b8">Extracts features → Scores strategies → Chooses best</text>
+  
+  <!-- Feature tags -->
+  <rect x="295" y="250" width="75" height="20" rx="10" fill="rgba(255,255,255,0.1)"/>
+  <text x="332" y="264" text-anchor="middle" font-size="9" fill="#cbd5e1">digit_ratio</text>
+  <rect x="378" y="250" width="65" height="20" rx="10" fill="rgba(255,255,255,0.1)"/>
+  <text x="410" y="264" text-anchor="middle" font-size="9" fill="#cbd5e1">oov_ratio</text>
+  <rect x="451" y="250" width="65" height="20" rx="10" fill="rgba(255,255,255,0.1)"/>
+  <text x="483" y="264" text-anchor="middle" font-size="9" fill="#cbd5e1">rare_ratio</text>
+  <rect x="524" y="250" width="60" height="20" rx="10" fill="rgba(255,255,255,0.1)"/>
+  <text x="554" y="264" text-anchor="middle" font-size="9" fill="#cbd5e1">n_tokens</text>
+  
+  <text x="450" y="282" text-anchor="middle" font-size="10" font-family="monospace" fill="#64748b">score = heuristic + learned_weight</text>
+  
+  <!-- Arrow 2 -->
+  <path d="M450 290 L450 310" stroke="#64748b" stroke-width="2" fill="none"/>
+  <polygon points="450,320 445,310 455,310" fill="#64748b"/>
+  
+  <!-- Retrievers Group -->
+  <rect x="130" y="325" width="640" height="110" rx="16" fill="rgba(255,255,255,0.02)" stroke="#334155" stroke-width="1" stroke-dasharray="5,5"/>
+  <rect x="145" y="313" width="130" height="18" rx="4" fill="#16213e"/>
+  <text x="210" y="326" text-anchor="middle" font-size="10" fill="#64748b">3 Retrieval Strategies</text>
+  
+  <!-- Keyword Retriever -->
+  <rect x="160" y="350" width="160" height="70" rx="12" fill="rgba(251,191,36,0.15)" stroke="#fbbf24" stroke-width="2" filter="url(#shadow)"/>
+  <text x="240" y="375" text-anchor="middle" font-size="13" font-weight="600" fill="#fbbf24">🔑 Keyword</text>
+  <text x="240" y="393" text-anchor="middle" font-size="11" fill="#94a3b8">BM25-like</text>
+  <text x="240" y="410" text-anchor="middle" font-size="9" fill="#64748b">Exact match, IDs</text>
+  
+  <!-- Vector Retriever -->
+  <rect x="370" y="350" width="160" height="70" rx="12" fill="rgba(16,185,129,0.15)" stroke="#10b981" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="375" text-anchor="middle" font-size="13" font-weight="600" fill="#34d399">🔢 Vector</text>
+  <text x="450" y="393" text-anchor="middle" font-size="11" fill="#94a3b8">TF-IDF Cosine</text>
+  <text x="450" y="410" text-anchor="middle" font-size="9" fill="#64748b">Semantic, NL</text>
+  
+  <!-- Hybrid Retriever -->
+  <rect x="580" y="350" width="160" height="70" rx="12" fill="rgba(244,114,182,0.15)" stroke="#f472b6" stroke-width="2" filter="url(#shadow)"/>
+  <text x="660" y="375" text-anchor="middle" font-size="13" font-weight="600" fill="#f472b6">⚡ Hybrid</text>
+  <text x="660" y="393" text-anchor="middle" font-size="11" fill="#94a3b8">Blended</text>
+  <text x="660" y="410" text-anchor="middle" font-size="9" fill="#64748b">Mixed queries</text>
+  
+  <!-- Arrow 3 -->
+  <path d="M450 435 L450 455" stroke="#64748b" stroke-width="2" fill="none"/>
+  <polygon points="450,465 445,455 455,455" fill="#64748b"/>
+  
+  <!-- Evaluator Box -->
+  <rect x="320" y="470" width="260" height="70" rx="12" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="2" filter="url(#shadow)"/>
+  <text x="450" y="498" text-anchor="middle" font-size="14" font-weight="600" fill="#f87171">📊 Evaluator</text>
+  <text x="450" y="518" text-anchor="middle" font-size="11" fill="#94a3b8">Scores retrieval: hit@k, exact match</text>
+  
+  <!-- Arrow 4 -->
+  <path d="M450 540 L450 560" stroke="#64748b" stroke-width="2" fill="none"/>
+  <polygon points="450,570 445,560 455,560" fill="#64748b"/>
+  
+  <!-- Bottom Row: Feedback + Telemetry -->
+  <!-- Feedback Box -->
+  <rect x="150" y="575" width="240" height="80" rx="12" fill="rgba(249,115,22,0.15)" stroke="#f97316" stroke-width="2" filter="url(#shadow)"/>
+  <text x="270" y="603" text-anchor="middle" font-size="14" font-weight="600" fill="#fb923c">🔄 Feedback Loop</text>
+  <text x="270" y="623" text-anchor="middle" font-size="11" fill="#94a3b8">Updates router weights (bandit-style)</text>
+  <text x="270" y="643" text-anchor="middle" font-size="10" font-family="monospace" fill="#64748b">weight[winner] += lr</text>
+  
+  <!-- Arrow between Feedback and Telemetry -->
+  <path d="M390 615 L430 615" stroke="#64748b" stroke-width="2" fill="none"/>
+  <polygon points="440,615 430,610 430,620" fill="#64748b"/>
+  
+  <!-- Telemetry Box -->
+  <rect x="450" y="575" width="300" height="80" rx="12" fill="rgba(14,165,233,0.15)" stroke="#0ea5e9" stroke-width="2" filter="url(#shadow)"/>
+  <text x="600" y="603" text-anchor="middle" font-size="14" font-weight="600" fill="#38bdf8">💾 Telemetry Store</text>
+  <text x="600" y="623" text-anchor="middle" font-size="11" fill="#94a3b8">Logs runs, router state, metrics</text>
+  
+  <!-- Telemetry backend tags -->
+  <rect x="490" y="633" width="90" height="18" rx="9" fill="rgba(255,255,255,0.1)"/>
+  <text x="535" y="645" text-anchor="middle" font-size="9" fill="#cbd5e1">SQLite (default)</text>
+  <rect x="588" y="633" width="100" height="18" rx="9" fill="rgba(255,255,255,0.1)"/>
+  <text x="638" y="645" text-anchor="middle" font-size="9" fill="#cbd5e1">Lakebase Postgres</text>
+  
+  <!-- Feedback arrow back to Router -->
+  <path d="M150 615 L100 615 L100 240 L280 240" stroke="#fb923c" stroke-width="2" stroke-dasharray="5,3" fill="none"/>
+  <polygon points="280,240 270,235 270,245" fill="#fb923c"/>
+  <text x="90" y="430" text-anchor="middle" font-size="9" fill="#fb923c" transform="rotate(-90, 90, 430)">learns over time</text>
+  
+  <!-- Legend -->
+  <g transform="translate(200, 672)">
+    <circle cx="10" cy="0" r="5" fill="#60a5fa"/>
+    <text x="20" y="4" font-size="10" fill="#94a3b8">Input</text>
+    
+    <circle cx="80" cy="0" r="5" fill="#a78bfa"/>
+    <text x="90" y="4" font-size="10" fill="#94a3b8">Router</text>
+    
+    <circle cx="160" cy="0" r="5" fill="#34d399"/>
+    <text x="170" y="4" font-size="10" fill="#94a3b8">Retrievers</text>
+    
+    <circle cx="260" cy="0" r="5" fill="#f87171"/>
+    <text x="270" y="4" font-size="10" fill="#94a3b8">Evaluation</text>
+    
+    <circle cx="360" cy="0" r="5" fill="#fb923c"/>
+    <text x="370" y="4" font-size="10" fill="#94a3b8">Learning</text>
+    
+    <circle cx="450" cy="0" r="5" fill="#38bdf8"/>
+    <text x="460" y="4" font-size="10" fill="#94a3b8">Storage</text>
+  </g>
+  
+  <!-- GitHub Link (centered below legend) -->
+  <text x="450" y="700" text-anchor="middle" font-size="12" fill="#60a5fa">🔗 github.com/mick2004/beyond-vector-search</text>
+</svg>
+

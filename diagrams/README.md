@@ -14,3 +14,4 @@
 - The diagram is **self-contained**: pure HTML + CSS + inline SVG (no CDN, no images).
 
 
+

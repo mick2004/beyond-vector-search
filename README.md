@@ -1,9 +1,29 @@
 # beyond-vector-search
 
-**Beyond vector search**: a tiny, runnable reference implementation of an **adaptive retrieval router** (vector vs keyword) with an **evaluation feedback loop** and **local SQLite telemetry**—built to illustrate how “learned retrieval” fits into agentic RAG systems.
+**Beyond vector search**: a tiny, runnable reference implementation of an **adaptive retrieval router** (vector vs keyword vs hybrid) with an **evaluation feedback loop** and **local SQLite telemetry**—built to illustrate how "learned retrieval" fits into agentic RAG systems.
 
-- ![tests](https://github.com/mick2004/beyond-vector-search/actions/workflows/tests.yml/badge.svg)
-- ![license](https://img.shields.io/badge/license-MIT-blue)
+[![Read the Blog Post](https://img.shields.io/badge/📖_Read_the_Blog-Medium-00ab6c?style=for-the-badge&logo=medium)](https://medium.com/@sumoaps/beyond-vector-search-building-an-adaptive-retrieval-router-for-agentic-ai-systems-1af6b059826f)
+
+![tests](https://github.com/mick2004/beyond-vector-search/actions/workflows/tests.yml/badge.svg)
+![license](https://img.shields.io/badge/license-MIT-blue)
+
+---
+
+## 📖 Blog Post
+
+**[Beyond Vector Search: Building an Adaptive Retrieval Router for Agentic AI Systems](https://medium.com/@sumoaps/beyond-vector-search-building-an-adaptive-retrieval-router-for-agentic-ai-systems-1af6b059826f)**
+
+A detailed walkthrough covering:
+- Why static retrieval breaks in agentic workflows (compounding errors)
+- How the adaptive router chooses between keyword, vector, and hybrid strategies
+- Query feature extraction and the decision formula
+- The feedback loop that makes retrieval learnable
+- Industry example: fintech chargebacks
+- Common mistakes and failure modes in production
+
+👉 **[Read the full post on Medium →](https://medium.com/@sumoaps/beyond-vector-search-building-an-adaptive-retrieval-router-for-agentic-ai-systems-1af6b059826f)**
+
+---
 
 - Architecture diagram: open `diagrams/architecture.html` locally (or via GitHub Pages).
 - No external downloads, no network calls, CPU-only.

@@ -39,3 +39,4 @@ def generate_answer(query: str, top_k: list[RetrievalResult]) -> Answer:
     return Answer(text=txt, citations=[top.doc_id])
 
 
+

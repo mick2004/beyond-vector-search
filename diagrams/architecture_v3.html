@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adaptive Retrieval Router - Architecture</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      padding: 40px;
+      color: #e8e8e8;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #00d4ff, #7c3aed, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 1.1rem;
+      margin-bottom: 50px;
+    }
+    
+    .architecture {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+    
+    .row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .box {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 24px 32px;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .box:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .box h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .box p {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+    
+    .box.query {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.05));
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+    
+    .box.query h3 { color: #60a5fa; }
+    
+    .box.router {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(124, 58, 237, 0.05));
+      border-color: rgba(124, 58, 237, 0.4);
+      min-width: 280px;
+    }
+    
+    .box.router h3 { color: #a78bfa; }
+    
+    .box.retriever {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));
+      border-color: rgba(16, 185, 129, 0.4);
+      min-width: 160px;
+    }
+    
+    .box.retriever h3 { color: #34d399; }
+    
+    .box.retriever.keyword { border-color: rgba(251, 191, 36, 0.4); }
+    .box.retriever.keyword h3 { color: #fbbf24; }
+    
+    .box.retriever.vector { border-color: rgba(16, 185, 129, 0.4); }
+    .box.retriever.vector h3 { color: #34d399; }
+    
+    .box.retriever.hybrid { border-color: rgba(244, 114, 182, 0.4); }
+    .box.retriever.hybrid h3 { color: #f472b6; }
+    
+    .box.evaluator {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.05));
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+    
+    .box.evaluator h3 { color: #f87171; }
+    
+    .box.telemetry {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(14, 165, 233, 0.05));
+      border-color: rgba(14, 165, 233, 0.4);
+      min-width: 300px;
+    }
+    
+    .box.telemetry h3 { color: #38bdf8; }
+    
+    .box.feedback {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(249, 115, 22, 0.05));
+      border-color: rgba(249, 115, 22, 0.4);
+    }
+    
+    .box.feedback h3 { color: #fb923c; }
+    
+    .arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-size: 1.5rem;
+    }
+    
+    .arrow-down {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .arrow-down::after {
+      content: "▼";
+      color: #64748b;
+      font-size: 1.2rem;
+    }
+    
+    .features-list {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 12px;
+    }
+    
+    .feature-tag {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      color: #cbd5e1;
+    }
+    
+    .data-flow {
+      position: relative;
+      margin: 20px 0;
+    }
+    
+    .flow-line {
+      position: absolute;
+      background: linear-gradient(90deg, transparent, #64748b, transparent);
+      height: 2px;
+      width: 100%;
+      top: 50%;
+    }
+    
+    .legend {
+      margin-top: 50px;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+    
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    
+    .legend-dot.query { background: #60a5fa; }
+    .legend-dot.router { background: #a78bfa; }
+    .legend-dot.retriever { background: #34d399; }
+    .legend-dot.evaluator { background: #f87171; }
+    .legend-dot.telemetry { background: #38bdf8; }
+    .legend-dot.feedback { background: #fb923c; }
+    
+    .github-link {
+      text-align: center;
+      margin-top: 40px;
+    }
+    
+    .github-link a {
+      color: #60a5fa;
+      text-decoration: none;
+      font-size: 1rem;
+      padding: 12px 24px;
+      border: 1px solid rgba(96, 165, 250, 0.4);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .github-link a:hover {
+      background: rgba(96, 165, 250, 0.1);
+      border-color: #60a5fa;
+    }
+    
+    .retrievers-group {
+      display: flex;
+      gap: 20px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 20px;
+      border-radius: 20px;
+      border: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+    
+    .group-label {
+      position: absolute;
+      top: -12px;
+      left: 20px;
+      background: #1a1a2e;
+      padding: 2px 12px;
+      font-size: 0.75rem;
+      color: #64748b;
+      border-radius: 4px;
+    }
+    
+    .strategy-score {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Adaptive Retrieval Router</h1>
+    <p class="subtitle">Beyond Vector Search — Learned Routing for Agentic AI Systems</p>
+    
+    <div class="architecture">
+      <!-- Row 1: Query Input -->
+      <div class="row">
+        <div class="box query">
+          <h3>📝 Query</h3>
+          <p>"INC-10010 cache stampede"</p>
+        </div>
+      </div>
+      
+      <div class="arrow-down"></div>
+      
+      <!-- Row 2: Router -->
+      <div class="row">
+        <div class="box router">
+          <h3>🧠 Adaptive Router</h3>
+          <p>Extracts features → Scores strategies → Chooses best</p>
+          <div class="features-list">
+            <span class="feature-tag">digit_ratio</span>
+            <span class="feature-tag">oov_ratio</span>
+            <span class="feature-tag">rare_ratio</span>
+            <span class="feature-tag">n_tokens</span>
+          </div>
+          <div class="strategy-score">
+            score = heuristic + learned_weight
+          </div>
+        </div>
+      </div>
+      
+      <div class="arrow-down"></div>
+      
+      <!-- Row 3: Retrievers -->
+      <div class="row">
+        <div class="retrievers-group" style="position: relative;">
+          <span class="group-label">3 Retrieval Strategies</span>
+          <div class="box retriever keyword">
+            <h3>🔑 Keyword</h3>
+            <p>BM25-like</p>
+            <p style="font-size: 0.75rem; margin-top: 8px;">Exact match, IDs</p>
+          </div>
+          <div class="box retriever vector">
+            <h3>🔢 Vector</h3>
+            <p>TF-IDF Cosine</p>
+            <p style="font-size: 0.75rem; margin-top: 8px;">Semantic, NL</p>
+          </div>
+          <div class="box retriever hybrid">
+            <h3>⚡ Hybrid</h3>
+            <p>Blended</p>
+            <p style="font-size: 0.75rem; margin-top: 8px;">Mixed queries</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="arrow-down"></div>
+      
+      <!-- Row 4: Evaluator -->
+      <div class="row">
+        <div class="box evaluator">
+          <h3>📊 Evaluator</h3>
+          <p>Scores retrieval: hit@k, exact match</p>
+          <div class="features-list">
+            <span class="feature-tag">retrieval_score</span>
+            <span class="feature-tag">answer_score</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="arrow-down"></div>
+      
+      <!-- Row 5: Feedback + Telemetry -->
+      <div class="row">
+        <div class="box feedback">
+          <h3>🔄 Feedback Loop</h3>
+          <p>Updates router weights (bandit-style)</p>
+          <div class="strategy-score">
+            weight[winner] += lr
+          </div>
+        </div>
+        
+        <span class="arrow">→</span>
+        
+        <div class="box telemetry">
+          <h3>💾 Telemetry Store</h3>
+          <p>Logs runs, router state, metrics</p>
+          <div class="features-list">
+            <span class="feature-tag">SQLite (default)</span>
+            <span class="feature-tag">Lakebase Postgres</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-dot query"></div>
+        <span>Input</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot router"></div>
+        <span>Router (Policy)</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot retriever"></div>
+        <span>Retrievers</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot evaluator"></div>
+        <span>Evaluation</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot feedback"></div>
+        <span>Learning</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot telemetry"></div>
+        <span>Storage</span>
+      </div>
+    </div>
+    
+    <!-- GitHub Link -->
+    <div class="github-link">
+      <a href="https://github.com/mick2004/beyond-vector-search" target="_blank">
+        🔗 github.com/mick2004/beyond-vector-search
+      </a>
+    </div>
+  </div>
+</body>
+</html>
+
