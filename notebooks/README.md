@@ -1,17 +1,20 @@
 # Notebooks
 
-## Databricks Demo
+## `demo.py` — Databricks Notebook
 
-**File:** `notebooks/databricks_lakebase_demo.py`
+**File:** `notebooks/demo.py`
 
 A fully documented, interactive notebook demonstrating the adaptive retrieval router.
+
+> **⚠️ Databricks-specific:** This notebook uses Databricks-native format (`# MAGIC`, `# COMMAND ----------`).
+> It's designed to run in **Databricks Repos**. For non-Databricks environments, use the CLI instead (see below).
 
 ### What it demonstrates
 
 | Cell | What it does |
 |------|--------------|
 | 1 | Environment setup (repo root, Python path) |
-| 2 | Telemetry backend configuration (Lakebase or SQLite) |
+| 2 | Telemetry backend configuration (SQLite or Lakebase) |
 | 3 | Provision telemetry tables (`CREATE TABLE IF NOT EXISTS`) |
 | 4 | Run a single query end-to-end (routing → retrieval → answer) |
 | 5 | Offline evaluation loop (score all strategies, update router weights) |
@@ -20,58 +23,28 @@ A fully documented, interactive notebook demonstrating the adaptive retrieval ro
 
 ### Telemetry Backend Options
 
-#### Option A: Databricks Lakebase (Postgres OLTP)
+| Backend | Setup | Best for |
+|---------|-------|----------|
+| **SQLite** (default) | No setup needed | Quick tests, local dev |
+| **Lakebase Postgres** | [Provision instance first](https://docs.databricks.com/aws/en/oltp/instances/create/) | Production, shared state |
 
-Best for production and persistent telemetry.
+---
 
-**Prerequisite:** Provision a Lakebase database instance first:
-- [Lakebase provisioning docs](https://docs.databricks.com/aws/en/oltp/instances/create/)
+## Running Without Databricks (CLI)
 
-Set environment variables:
-```bash
-BVS_TELEMETRY=lakebase
-BVS_LAKEBASE_DSN=postgresql://USER:PASSWORD@HOST:5432/DBNAME
-```
-
-#### Option B: SQLite (local/dev)
-
-No setup required. Uses a local SQLite file.
+If you're **not using Databricks**, you can run the same functionality via the command line on any machine with Python 3.11+:
 
 ```bash
-BVS_TELEMETRY=sqlite   # or just leave unset
-```
+# Install
+pip install -e .
 
-The DB file is stored at `runs/beyond_vector_search.sqlite` by default.
-
-### Architecture Diagram
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                       ADAPTIVE RETRIEVAL ROUTER                         │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│   Query ──▶ Router (choose) ──▶ Retriever (keyword/vector/hybrid)       │
-│                  │                           │                          │
-│                  ▼                           ▼                          │
-│          Feedback loop  ◀──────────  Evaluator (hit@k)                  │
-│          (update weights)                                               │
-│                  │                                                      │
-│                  ▼                                                      │
-│          Telemetry Store (Lakebase or SQLite)                           │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
-```
-
-### Running Locally (without Databricks)
-
-You can run the same code locally using the CLI:
-
-```bash
-# Quick run
+# Run a single query
 python -m beyond_vector_search.run --query "INC-10010 cache stampede"
 
-# Evaluation loop
+# Run offline evaluation (updates router weights)
 python -m beyond_vector_search.evaluate
 ```
 
-This uses SQLite by default. See `README.md` in repo root for full quickstart.
+This uses SQLite by default. Telemetry is stored in `runs/beyond_vector_search.sqlite`.
+
+See the main `README.md` for full quickstart instructions.

@@ -53,21 +53,14 @@ python -m beyond_vector_search.run --query "What does BM25 do?"
 python -m beyond_vector_search.evaluate
 ```
 
-### Option B (uv)
+### Option B (Databricks notebook)
 
-```bash
-uv venv
-uv pip install -e .
-python -m beyond_vector_search.run --query "What does BM25 do?"
-python -m beyond_vector_search.evaluate
-```
+- Open `notebooks/demo.py` in Databricks Repos
+- The notebook runs end-to-end: single query, offline evaluation, telemetry inspection
+- **Default backend**: SQLite (no setup needed)
+- **Optional**: Use [Lakebase Postgres](https://docs.databricks.com/aws/en/oltp/instances/create/) for production (set `BVS_TELEMETRY=lakebase`)
 
-### Option C (Databricks notebook)
-
-- Open `notebooks/databricks_lakebase_demo.py` in Databricks (Repos).
-- It runs a single query, runs the offline evaluator (which updates router weights), and shows how to inspect the SQLite telemetry DB.
-- By default on Databricks, the notebook is set up to use **Lakebase Postgres** telemetry via env vars: `BVS_TELEMETRY=lakebase`.
-  - Lakebase docs: `https://docs.databricks.com/aws/en/oltp/`
+> **Note:** The notebook uses Databricks-native format. For non-Databricks environments, use Option A (CLI).
 
 ## What this is / isn’t
 

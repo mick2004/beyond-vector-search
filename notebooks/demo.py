@@ -3,7 +3,14 @@
 # MAGIC # Beyond Vector Search — Adaptive Retrieval Router Demo
 # MAGIC
 # MAGIC This notebook demonstrates an **adaptive retrieval router** that learns which retrieval strategy
-# MAGIC works best for different query types — all running inside Databricks.
+# MAGIC works best for different query types.
+# MAGIC
+# MAGIC > **Note:** This notebook uses Databricks-native format (`# MAGIC`, `# COMMAND ----------`).
+# MAGIC > It's designed to run in **Databricks Repos**. For non-Databricks environments, use the CLI instead:
+# MAGIC > ```bash
+# MAGIC > python -m beyond_vector_search.run --query "your query"
+# MAGIC > python -m beyond_vector_search.evaluate
+# MAGIC > ```
 # MAGIC
 # MAGIC ---
 # MAGIC
@@ -11,49 +18,29 @@
 # MAGIC
 # MAGIC ```
 # MAGIC ┌─────────────────────────────────────────────────────────────────────────────┐
-# MAGIC │                           ADAPTIVE RETRIEVAL ROUTER                         │
+# MAGIC │                       ADAPTIVE RETRIEVAL ROUTER                             │
 # MAGIC ├─────────────────────────────────────────────────────────────────────────────┤
 # MAGIC │                                                                             │
-# MAGIC │   ┌─────────┐      ┌──────────────────┐      ┌─────────────────────────┐   │
-# MAGIC │   │  Query  │ ───▶ │  Router (choose) │ ───▶ │  Retriever (1 of 3)     │   │
-# MAGIC │   └─────────┘      │  • query features│      │  • Keyword (BM25-like)  │   │
-# MAGIC │                    │  • learned weights│      │  • Vector (TF-IDF)      │   │
-# MAGIC │                    └──────────────────┘      │  • Hybrid (blend)       │   │
-# MAGIC │                             │                └───────────┬─────────────┘   │
-# MAGIC │                             │                            │                 │
-# MAGIC │                             ▼                            ▼                 │
-# MAGIC │                    ┌──────────────────┐      ┌─────────────────────────┐   │
-# MAGIC │                    │  Feedback loop   │ ◀─── │  Evaluator (hit@k)      │   │
-# MAGIC │                    │  (update weights)│      │  (score retrieval)      │   │
-# MAGIC │                    └────────┬─────────┘      └─────────────────────────┘   │
-# MAGIC │                             │                                              │
-# MAGIC │                             ▼                                              │
-# MAGIC │                    ┌──────────────────┐                                    │
-# MAGIC │                    │  Telemetry Store │  ◀── Lakebase Postgres (or SQLite) │
-# MAGIC │                    │  • run logs      │                                    │
-# MAGIC │                    │  • router state  │                                    │
-# MAGIC │                    └──────────────────┘                                    │
+# MAGIC │   Query ──▶ Router ──▶ Retriever (keyword / vector / hybrid)                │
+# MAGIC │               │                      │                                      │
+# MAGIC │               ▼                      ▼                                      │
+# MAGIC │         Feedback loop ◀───── Evaluator (hit@k)                              │
+# MAGIC │         (update weights)                                                    │
+# MAGIC │               │                                                             │
+# MAGIC │               ▼                                                             │
+# MAGIC │         Telemetry Store ◀── SQLite (default) or Lakebase Postgres           │
 # MAGIC │                                                                             │
 # MAGIC └─────────────────────────────────────────────────────────────────────────────┘
 # MAGIC ```
 # MAGIC
 # MAGIC ---
 # MAGIC
-# MAGIC ## Prerequisites
+# MAGIC ## Telemetry Backend (choose one)
 # MAGIC
-# MAGIC ### Option A: Databricks Lakebase (recommended for production)
-# MAGIC
-# MAGIC **Provision a Lakebase Postgres instance** before running this notebook:
-# MAGIC
-# MAGIC 1. Go to **Compute → Lakebase Provisioned → Create database instance**
-# MAGIC 2. Note the connection endpoint (DSN)
-# MAGIC 3. See full docs: https://docs.databricks.com/aws/en/oltp/instances/create/
-# MAGIC
-# MAGIC ### Option B: SQLite (simple local/dev mode)
-# MAGIC
-# MAGIC If you don't have Lakebase or want a quick local test:
-# MAGIC - Set `BVS_TELEMETRY=sqlite` (or leave unset)
-# MAGIC - The notebook will use a local SQLite file at `runs/beyond_vector_search.sqlite`
+# MAGIC | Backend | Setup | Best for |
+# MAGIC |---------|-------|----------|
+# MAGIC | **SQLite** (default) | No setup needed | Quick tests, local dev |
+# MAGIC | **Lakebase Postgres** | [Provision instance first](https://docs.databricks.com/aws/en/oltp/instances/create/) | Production, shared state |
 # MAGIC
 # MAGIC ---
 
