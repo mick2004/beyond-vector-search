@@ -64,7 +64,7 @@ python -m beyond_vector_search.evaluate
 
 ### Option C (Databricks notebook)
 
-- Open `notebooks/databricks_demo.ipynb` in Databricks (Repos).
+- Open `notebooks/databricks_demo.py` in Databricks (Repos).
 - It runs a single query, runs the offline evaluator (which updates router weights), and shows how to inspect the SQLite telemetry DB.
 - By default on Databricks, the notebook is set up to use **Lakebase Postgres** telemetry via env vars: `BVS_TELEMETRY=lakebase`.
   - Lakebase docs: `https://docs.databricks.com/aws/en/oltp/`
