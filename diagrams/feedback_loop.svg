@@ -32,7 +32,7 @@
 
   <rect class="box" x="760" y="70" width="180" height="70" rx="14"/>
   <text class="label" x="780" y="100">Telemetry</text>
-  <text class="small" x="780" y="122">Delta/SQLite</text>
+  <text class="small" x="780" y="122">Lakebase/SQLite</text>
 
   <!-- Arrows -->
   <path class="arrow" d="M 220 105 L 270 105"/>

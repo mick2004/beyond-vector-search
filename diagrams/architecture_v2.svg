@@ -61,7 +61,7 @@
 
   <rect class="box" x="840" y="356" width="220" height="84" rx="14"/>
   <text class="label" x="860" y="388">Telemetry Store</text>
-  <text class="small" x="860" y="412">Delta (DBX) or SQLite</text>
+  <text class="small" x="860" y="412">Lakebase Postgres or SQLite</text>
 
   <!-- Arrows -->
   <path class="arrow" d="M 225 95 L 270 95"/>
