@@ -75,9 +75,10 @@ python -m beyond_vector_search.evaluate
 
 ## What it does
 
-- Two retrieval strategies:
-  - **Vector**: TF‑IDF cosine similarity (dense-ish “vector retrieval” proxy, CPU-friendly).
-  - **Keyword**: BM25-like scoring (term-frequency + IDF).
+- Three retrieval strategies:
+  - **Vector**: character n‑gram TF‑IDF cosine similarity (fuzzy similarity, CPU-friendly).
+  - **Keyword**: BM25-like scoring (term-frequency + IDF, exact match bias).
+  - **Hybrid**: a simple blend of keyword + vector signals (safer default for mixed queries).
 - **Router** chooses a strategy per query using:
   - query features (length, digit/ID presence, “rare token” ratio, etc.)
   - learned weights updated from past evaluation outcomes (simple bandit-style weight update)

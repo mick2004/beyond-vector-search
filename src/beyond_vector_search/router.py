@@ -77,7 +77,19 @@ class AdaptiveRouter:
         )
         heuristic_vector = 0.50 * (1.0 - min(1.0, feats.oov_ratio + feats.rare_ratio))
         # Hybrid is a "safer" default when signals conflict (some ID-ish signal, but also natural language).
-        heuristic_hybrid = 0.35 * heuristic_keyword + 0.35 * heuristic_vector + 0.15 * (1.0 - abs(feats.oov_ratio - feats.rare_ratio))
+        # We explicitly boost hybrid for "mixed" queries: at least one ID-ish token + enough remaining text
+        # to benefit from fuzzy matching.
+        mixed_query_boost = (
+            0.45
+            if (feats.digit_ratio >= 0.12 and feats.n_tokens >= 5)
+            else (0.25 if (feats.digit_ratio > 0.0 and feats.n_tokens >= 4) else 0.0)
+        )
+        heuristic_hybrid = (
+            0.45 * heuristic_keyword
+            + 0.45 * heuristic_vector
+            + 0.10 * (1.0 - abs(feats.oov_ratio - feats.rare_ratio))
+            + mixed_query_boost
+        )
 
         score_keyword = heuristic_keyword + state.weight_keyword
         score_vector = heuristic_vector + state.weight_vector
