@@ -144,3 +144,47 @@ class KeywordRetriever:
         return [RetrievalResult(doc=self.docs[i], score=scores[i]) for i in idxs]
 
 
+@dataclass(frozen=True)
+class HybridRetriever:
+    """
+    A simple hybrid: combines keyword and vector signals.
+
+    This is intentionally minimal (no ANN index, no reranker): it exists so the router
+    has a meaningful third arm that often behaves differently than either pure strategy.
+    """
+
+    docs: list[Document]
+    vector: VectorRetriever
+    keyword: KeywordRetriever
+
+    alpha_keyword: float = 0.60  # weight on keyword
+    alpha_vector: float = 0.40   # weight on vector
+
+    def search(self, query: str, *, k: int = 5) -> list[RetrievalResult]:
+        # Score all docs with both retrievers, then blend normalized scores.
+        vec_scores = {r.doc.doc_id: r.score for r in self.vector.search(query, k=len(self.docs))}
+        key_scores = {r.doc.doc_id: r.score for r in self.keyword.search(query, k=len(self.docs))}
+
+        # Min-max normalize per strategy (safe on constant arrays).
+        def norm(m: dict[str, float]) -> dict[str, float]:
+            if not m:
+                return {}
+            vals = list(m.values())
+            lo, hi = min(vals), max(vals)
+            if hi <= lo:
+                return {k: 0.0 for k in m}
+            return {k: (v - lo) / (hi - lo) for k, v in m.items()}
+
+        v_n = norm(vec_scores)
+        k_n = norm(key_scores)
+
+        scores: list[float] = []
+        for d in self.docs:
+            dv = v_n.get(d.doc_id, 0.0)
+            dk = k_n.get(d.doc_id, 0.0)
+            scores.append(self.alpha_keyword * dk + self.alpha_vector * dv)
+
+        idxs = stable_topk(scores, k)
+        return [RetrievalResult(doc=self.docs[i], score=scores[i]) for i in idxs]
+
+

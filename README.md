@@ -20,6 +20,22 @@
 
 For the interactive/self-contained version, open `diagrams/architecture.html`.
 
+## Story: why routing matters (a real failure pattern)
+
+Imagine an **incident triage agent** in a Databricks/enterprise setting.
+
+- A user types: “pipeline failed for `INC-49217` — what changed?”
+- The agent retrieves the wrong context (because “INC-49217” is a rare token and fuzzy similarity pulls generic “incident” docs).
+- That wrong context becomes the next-step prompt → the agent generates the wrong diagnosis → then it issues follow-up queries that **drift further**.
+
+With **adaptive retrieval routing**, the system:
+- detects “ID-like / rare token” query structure and routes to **keyword/BM25-like** retrieval (exact match bias)
+- uses **vector-ish similarity** for paraphrased “what is adaptive retrieval?” style questions
+- uses a **hybrid** when signals conflict
+- closes the loop with evaluation feedback so the policy improves instead of repeating the same miss
+
+This is the core benefit: **retrieval stops being a static dependency and becomes a measurable decision layer.**
+
 ## Quickstart (CPU, end-to-end)
 
 Prereqs: **Python 3.11+**

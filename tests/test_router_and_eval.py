@@ -27,15 +27,16 @@ class TestRouter(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             db_path = str(Path(td) / "test.sqlite")
             router = AdaptiveRouter.build(vocab={"a"}, rare_terms=set(), db_path=db_path)
-            state = RouterState(weight_vector=0.0, weight_keyword=0.0, lr=0.5)
+            state = RouterState(weight_vector=0.0, weight_keyword=0.0, weight_hybrid=0.0, lr=0.5)
             router.save_state(state)
 
             # keyword consistently better
             for _ in range(4):
-                router.update_from_pairwise(score_vector=0.0, score_keyword=1.0)
+                router.update_from_scores(scores={"vector": 0.0, "keyword": 1.0, "hybrid": 0.25})
 
             st = router.load_state()
             self.assertGreater(st.weight_keyword, st.weight_vector)
+            self.assertGreater(st.weight_keyword, st.weight_hybrid)
 
 
 if __name__ == "__main__":

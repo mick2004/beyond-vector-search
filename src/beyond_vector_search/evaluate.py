@@ -8,7 +8,7 @@ from .answer import generate_answer
 from .data import load_corpus, load_labels
 from .evaluator import evaluate_run
 from .index import build_corpus_stats
-from .retrievers import KeywordRetriever, VectorRetriever
+from .retrievers import HybridRetriever, KeywordRetriever, VectorRetriever
 from .router import AdaptiveRouter
 from .telemetry import telemetry_from_env
 
@@ -20,6 +20,7 @@ def evaluate_all(*, k: int = 5, db_path=None) -> dict:
     stats = build_corpus_stats(docs, rare_df_threshold=1)
     vec = VectorRetriever.build(docs, stats)
     key = KeywordRetriever.build(docs, stats)
+    hyb = HybridRetriever(docs=docs, vector=vec, keyword=key)
 
     store = telemetry_from_env(sqlite_path=db_path)
     router = AdaptiveRouter.build(vocab=stats.vocab, rare_terms=stats.rare_terms, db_path=db_path)
@@ -29,9 +30,11 @@ def evaluate_all(*, k: int = 5, db_path=None) -> dict:
     for lab in labels:
         top_vec = vec.search(lab.query, k=k)
         top_key = key.search(lab.query, k=k)
+        top_hyb = hyb.search(lab.query, k=k)
 
         ans_vec = generate_answer(lab.query, top_vec).text
         ans_key = generate_answer(lab.query, top_key).text
+        ans_hyb = generate_answer(lab.query, top_hyb).text
 
         s_vec = evaluate_run(
             top_k=top_vec,
@@ -45,14 +48,25 @@ def evaluate_all(*, k: int = 5, db_path=None) -> dict:
             expected_doc_id=lab.expected_doc_id,
             expected_answer=lab.expected_answer,
         )
+        s_hyb = evaluate_run(
+            top_k=top_hyb,
+            answer_text=ans_hyb,
+            expected_doc_id=lab.expected_doc_id,
+            expected_answer=lab.expected_answer,
+        )
 
         # What would the router choose right now?
         chosen, feats, route_meta = router.choose(lab.query)
-        chosen_scores = s_vec if chosen == "vector" else s_key
+        if chosen == "vector":
+            chosen_scores = s_vec
+        elif chosen == "keyword":
+            chosen_scores = s_key
+        else:
+            chosen_scores = s_hyb
 
         total += chosen_scores.total
 
-        router.update_from_pairwise(score_vector=s_vec.total, score_keyword=s_key.total)
+        router.update_from_scores(scores={"vector": s_vec.total, "keyword": s_key.total, "hybrid": s_hyb.total})
 
         store.log_run(
             query=lab.query,
@@ -76,6 +90,12 @@ def evaluate_all(*, k: int = 5, db_path=None) -> dict:
                     "exact_match": s_key.exact_match,
                     "top_doc_ids": [r.doc.doc_id for r in top_key],
                 },
+                "hybrid": {
+                    "score_total": s_hyb.total,
+                    "hit_at_k": s_hyb.hit_at_k,
+                    "exact_match": s_hyb.exact_match,
+                    "top_doc_ids": [r.doc.doc_id for r in top_hyb],
+                },
             },
         )
 
@@ -87,6 +107,7 @@ def evaluate_all(*, k: int = 5, db_path=None) -> dict:
                 "chosen_score": chosen_scores.total,
                 "vector_score": s_vec.total,
                 "keyword_score": s_key.total,
+                "hybrid_score": s_hyb.total,
             }
         )
 

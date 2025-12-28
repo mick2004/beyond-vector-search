@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Literal, Sequence
 
 
-Strategy = Literal["vector", "keyword"]
+Strategy = Literal["vector", "keyword", "hybrid"]
 
 
 @dataclass(frozen=True)

@@ -8,7 +8,7 @@ from .answer import build_context, generate_answer
 from .data import load_corpus, load_labels
 from .evaluator import evaluate_run
 from .index import build_corpus_stats
-from .retrievers import KeywordRetriever, VectorRetriever
+from .retrievers import HybridRetriever, KeywordRetriever, VectorRetriever
 from .router import AdaptiveRouter
 from .telemetry import telemetry_from_env
 
@@ -20,11 +20,17 @@ def run_once(*, query: str, k: int = 5, db_path=None) -> dict:
     stats = build_corpus_stats(docs, rare_df_threshold=1)
     vec = VectorRetriever.build(docs, stats)
     key = KeywordRetriever.build(docs, stats)
+    hyb = HybridRetriever(docs=docs, vector=vec, keyword=key)
 
     router = AdaptiveRouter.build(vocab=stats.vocab, rare_terms=stats.rare_terms, db_path=db_path)
     strategy, feats, route_meta = router.choose(query)
 
-    top_k = (vec.search(query, k=k) if strategy == "vector" else key.search(query, k=k))
+    if strategy == "vector":
+        top_k = vec.search(query, k=k)
+    elif strategy == "keyword":
+        top_k = key.search(query, k=k)
+    else:
+        top_k = hyb.search(query, k=k)
     ctx = build_context(top_k)
     ans = generate_answer(query, top_k)
 
